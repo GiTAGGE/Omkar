@@ -2,6 +2,44 @@
   const cfg = window.OT_SITE || {};
   const menu = document.getElementById("menuBtn");
   const nav = document.getElementById("navLinks");
+
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    el.scrollIntoView({ behavior: "smooth", block: id === "booking" ? "center" : "start" });
+    return true;
+  }
+
+  function stripHashFromUrl() {
+    if (!location.hash) return null;
+    const id = location.hash.slice(1);
+    history.replaceState(null, "", location.pathname + location.search);
+    return id;
+  }
+
+  const hashTarget = stripHashFromUrl();
+  const pendingScroll = sessionStorage.getItem("otScroll");
+
+  document.querySelectorAll("[data-scroll-target]").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      const id = el.getAttribute("data-scroll-target");
+      if (!id) return;
+      if (scrollToSection(id)) {
+        if (el.tagName === "A") e.preventDefault();
+        return;
+      }
+      if (el.tagName === "A") sessionStorage.setItem("otScroll", id);
+    });
+  });
+
+  const scrollOnLoad = hashTarget || pendingScroll;
+  if (scrollOnLoad) {
+    sessionStorage.removeItem("otScroll");
+    window.addEventListener("load", () => {
+      setTimeout(() => scrollToSection(scrollOnLoad), 50);
+    });
+  }
+
   if (menu && nav) {
     menu.addEventListener("click", () => {
       const open = nav.classList.toggle("open");
@@ -38,7 +76,7 @@
     b.addEventListener("click", () => {
       const vehicle = document.getElementById("vehicle");
       if (vehicle) vehicle.value = b.dataset.vehicle;
-      document.getElementById("booking")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      scrollToSection("booking");
       setTimeout(() => document.getElementById("from")?.focus({ preventScroll: true }), 400);
     })
   );
@@ -50,6 +88,7 @@
         b.classList.toggle("active", b.dataset.trip === v)
       );
       if (trip) trip.value = v;
+      if (!scrollToSection("booking")) sessionStorage.setItem("otScroll", "booking");
     })
   );
 
@@ -76,8 +115,13 @@
   });
 
   document.querySelectorAll("[data-whatsapp-link]").forEach((el) => {
-    const base = cfg.whatsapp ? "https://wa.me/" + cfg.whatsapp : "#booking";
-    el.setAttribute("href", base + (el.dataset.waText ? "?text=" + encodeURIComponent(el.dataset.waText) : ""));
+    if (cfg.whatsapp) {
+      const base = "https://wa.me/" + cfg.whatsapp;
+      el.setAttribute("href", base + (el.dataset.waText ? "?text=" + encodeURIComponent(el.dataset.waText) : ""));
+    } else {
+      el.setAttribute("href", "/");
+      el.setAttribute("data-scroll-target", "booking");
+    }
   });
 
   const form = document.getElementById("bookingForm");
