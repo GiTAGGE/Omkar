@@ -241,6 +241,30 @@ function pathPrefix(depth) {
   return depth === 0 ? "/" : "../".repeat(depth);
 }
 
+function pageRoot(depth) {
+  return depth === 0 ? "/" : "../".repeat(depth);
+}
+
+function scrollLink(depth, sectionId, label, className = "") {
+  const cls = className ? ` class="${className}"` : "";
+  return `<a href="${pageRoot(depth)}" data-scroll-target="${sectionId}"${cls}>${label}</a>`;
+}
+
+function homeLink(depth, label, className = "") {
+  const cls = className ? ` class="${className}"` : "";
+  const scroll = depth === 0 ? ' data-scroll-target="home"' : "";
+  return `<a href="${pageRoot(depth)}"${scroll}${cls}>${label}</a>`;
+}
+
+function brandLink(depth) {
+  const scroll = depth === 0 ? ' data-scroll-target="home"' : "";
+  return `<a class="brand" href="${pageRoot(depth)}"${scroll} aria-label="Omkareshwar Travels home"><span class="mark">O</span><span class="brandname">OMKARESHWAR<small>TRAVELS</small></span></a>`;
+}
+
+function bookingButton(label, className) {
+  return `<button type="button" class="${className}" data-scroll-target="booking">${label}</button>`;
+}
+
 function assetPrefix(depth) {
   return (depth === 0 ? "/" : "../".repeat(depth)) + "assets";
 }
@@ -332,23 +356,22 @@ function conversionStrip() {
  <div><strong>Instant WhatsApp quotes</strong><small>Share route & dates — fast reply</small></div>
  <div><strong>Hubli / Hubballi pickups</strong><small>Railway, bus stand & city</small></div>
  <div><strong>AC fleet</strong><small>Sedan · SUV · Innova · Traveller</small></div>
- <div><a class="btn gold" href="#booking">BOOK ON WHATSAPP ↗</a></div>
+ <div>${scrollLink(0, "booking", "BOOK ON WHATSAPP ↗", "btn gold")}</div>
 </div></div>`;
 }
 
 function nav(depth) {
-  const p = depth === 0 ? "" : "../".repeat(depth);
   return `<header class="nav">
  <div class="wrap navinner">
-  <a class="brand" href="${p}#home" aria-label="Omkareshwar Travels home"><span class="mark">O</span><span class="brandname">OMKARESHWAR<small>TRAVELS</small></span></a>
+  ${brandLink(depth)}
   <nav class="links" id="navLinks">
-   <a href="${p}#home">Home</a>
-   <a href="${p}#fleet">Our Fleet</a>
-   <a href="${p}#services">Services</a>
-   <a href="${p}#destinations">Destinations</a>
-   <a href="${p}#about">About Us</a>
+   ${homeLink(depth, "Home")}
+   ${scrollLink(depth, "fleet", "Our Fleet")}
+   ${scrollLink(depth, "services", "Services")}
+   ${scrollLink(depth, "destinations", "Destinations")}
+   ${scrollLink(depth, "about", "About Us")}
   </nav>
-  <a href="${p}#booking" class="btn gold navcta">BOOK YOUR RIDE ↗</a>
+  ${scrollLink(depth, "booking", "BOOK YOUR RIDE ↗", "btn gold navcta")}
   <button class="menu" id="menuBtn" aria-label="Toggle navigation" aria-expanded="false">☰</button>
  </div>
 </header>`;
@@ -377,10 +400,10 @@ function footer(depth) {
     .map((r) => `<a href="${p}routes/${r.slug}/">${r.name}</a>`)
     .join("");
   return `<footer id="contact"><div class="wrap"><div class="footgrid">
- <div><a class="brand" href="${p}#home"><span class="mark">O</span><span class="brandname">OMKARESHWAR<small>TRAVELS</small></span></a><p style="margin-top:15px;max-width:260px">Comfortable outstation cabs, local rentals, and airport transfers across Karnataka & Goa — planned around your schedule.</p></div>
- <div><h4>EXPLORE</h4><a href="${p}#fleet">Our Fleet</a><a href="${p}#services">Taxi Services</a><a href="${p}#destinations">Tour Destinations</a><a href="${p}#about">About Us</a></div>
- <div><h4>POPULAR ROUTES</h4>${routeLinks}<a href="${p}#destinations">View all routes ↗</a></div>
- <div><h4>GET IN TOUCH</h4><a href="tel:${CONTACT.phoneTel}" data-phone>${esc(CONTACT.phoneDisplay)}</a><a href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a><p>Based in ${esc(HUB_LABEL)}</p><a href="${p}#booking">Send a trip enquiry ↗</a></div>
+ <div>${brandLink(depth)}<p style="margin-top:15px;max-width:260px">Comfortable outstation cabs, local rentals, and airport transfers across Karnataka & Goa — planned around your schedule.</p></div>
+ <div><h4>EXPLORE</h4>${scrollLink(depth, "fleet", "Our Fleet")}${scrollLink(depth, "services", "Taxi Services")}${scrollLink(depth, "destinations", "Tour Destinations")}${scrollLink(depth, "about", "About Us")}</div>
+ <div><h4>POPULAR ROUTES</h4>${routeLinks}${scrollLink(depth, "destinations", "View all routes ↗")}</div>
+ <div><h4>GET IN TOUCH</h4><a href="tel:${CONTACT.phoneTel}" data-phone>${esc(CONTACT.phoneDisplay)}</a><a href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a><p>Based in ${esc(HUB_LABEL)}</p>${scrollLink(depth, "booking", "Send a trip enquiry ↗")}</div>
 </div><div class="copyright"><span>© <span id="year"></span> Omkareshwar Travels</span><span><a href="${p}privacy-policy/">Privacy Policy</a> &nbsp; · &nbsp; <a href="${p}terms/">Terms & Conditions</a></span></div></div>
 <div class="site-note">Outstation & local taxis · ${esc(HUB_LABEL)} · Karnataka & Goa · Call or WhatsApp for same-day quotes</div></footer>`;
 }
@@ -455,7 +478,7 @@ ${topBar(0)}
 ${nav(0)}
 <main>
 <section class="hero" id="home" style="--hero-image:url('${imagePath(0, "home/hero.jpg")}')"><div class="wrap heroGrid">
- <div><div class="eyebrow">HUBBALLI (HUBLI) TAXI SERVICE</div><h1>Your journey.<br><em>Our commitment.</em></h1><p class="herop">From Hubli to Goa, Hampi, the coast, and beyond — comfortable outstation cabs and local rentals with clear WhatsApp quotes, same-day availability, and personal service.</p><div class="herobuttons"><a href="#booking" class="btn gold">Plan Your Journey ↗</a><a class="btn outline" data-whatsapp-link data-wa-text="Hello Omkareshwar Travels, I need a cab from Hubli." href="https://wa.me/${CONTACT.whatsapp}">Chat on WhatsApp</a><a href="tel:${CONTACT.phoneTel}" class="btn outline" data-phone>Call Now</a></div><div class="micro"><span>Hubli & Hubballi pickups</span><span>Karnataka & Goa routes</span><span>Fast WhatsApp quotes</span></div></div>
+ <div><div class="eyebrow">HUBBALLI (HUBLI) TAXI SERVICE</div><h1>Your journey.<br><em>Our commitment.</em></h1><p class="herop">From Hubli to Goa, Hampi, the coast, and beyond — comfortable outstation cabs and local rentals with clear WhatsApp quotes, same-day availability, and personal service.</p><div class="herobuttons">${scrollLink(0, "booking", "Plan Your Journey ↗", "btn gold")}<a class="btn outline" data-whatsapp-link data-wa-text="Hello Omkareshwar Travels, I need a cab from Hubli." href="https://wa.me/${CONTACT.whatsapp}">Chat on WhatsApp</a><a href="tel:${CONTACT.phoneTel}" class="btn outline" data-phone>Call Now</a></div><div class="micro"><span>Hubli & Hubballi pickups</span><span>Karnataka & Goa routes</span><span>Fast WhatsApp quotes</span></div></div>
  ${bookingForm("", 0, CONTACT.hubCity)}
 </div></section>
 ${conversionStrip()}
@@ -484,7 +507,7 @@ ${conversionStrip()}
 ${allDestCards}
 </div></div></section>
 <section class="about" id="about"><div class="wrap aboutgrid"><div class="aboutpic"><img src="${imagePath(0, "home/about.jpg")}" alt="Scenic open road and landscape" width="1000" height="667" loading="lazy" decoding="async"><div class="aboutbadge">The journey should feel as good as the destination.<span>THE OMKARESHWAR APPROACH</span></div></div>
-<div class="aboutcopy"><div class="eyebrow">A MORE PERSONAL WAY TO TRAVEL</div><h2>Good journeys start with good planning.</h2><p>Based in <strong>Hubballi (Hubli)</strong>, we specialise in outstation taxis to Goa, coastal Karnataka, Hampi, Coorg, Belagavi, and adventure hubs like Dandeli — with sedans, SUVs, Innova, and Tempo Travellers.</p><p>Share your route and dates on WhatsApp at <a href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a> or call us directly. We discuss vehicle options, driver details, and transparent pricing before you confirm.</p><div class="points"><div class="point">Hubli railway & city pickups</div><div class="point">Goa & coastal route expertise</div><div class="point">Corporate & family group travel</div><div class="point">Airport & railway transfers</div></div><a class="btn gold" href="#booking">LET'S PLAN YOUR TRIP ↗</a></div>
+<div class="aboutcopy"><div class="eyebrow">A MORE PERSONAL WAY TO TRAVEL</div><h2>Good journeys start with good planning.</h2><p>Based in <strong>Hubballi (Hubli)</strong>, we specialise in outstation taxis to Goa, coastal Karnataka, Hampi, Coorg, Belagavi, and adventure hubs like Dandeli — with sedans, SUVs, Innova, and Tempo Travellers.</p><p>Share your route and dates on WhatsApp at <a href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a> or call us directly. We discuss vehicle options, driver details, and transparent pricing before you confirm.</p><div class="points"><div class="point">Hubli railway & city pickups</div><div class="point">Goa & coastal route expertise</div><div class="point">Corporate & family group travel</div><div class="point">Airport & railway transfers</div></div>${scrollLink(0, "booking", "LET'S PLAN YOUR TRIP ↗", "btn gold")}</div>
 </div></section>
 <section class="reviews"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">TRAVEL WITH CONFIDENCE</div><h2>Your trust matters.</h2></div><p>High-intent travel needs clear communication — we focus on punctual pickups, safe driving, and honest quotations.</p></div>
 <div class="reviewgrid">
@@ -493,7 +516,7 @@ ${allDestCards}
  <article class="review"><div class="stars">★★★★★</div><blockquote>“From a short ride to a longer getaway, every detail deserves attention.”</blockquote><strong>Our promise</strong><small>Service built around your trip</small></article>
 </div></div></section>
 ${seoHubSection()}
-<div class="cta"><div class="wrap ctainner"><div><h2>Your next journey starts here.</h2><p>Call now or send your route on WhatsApp — we respond quickly with vehicle options and fares.</p></div><div class="ctabtns"><a href="#booking" class="btn darkbtn">GET A QUOTE ↗</a><a href="tel:${CONTACT.phoneTel}" class="btn lightbtn" data-phone>CALL US</a></div></div></div>
+<div class="cta"><div class="wrap ctainner"><div><h2>Your next journey starts here.</h2><p>Call now or send your route on WhatsApp — we respond quickly with vehicle options and fares.</p></div><div class="ctabtns">${scrollLink(0, "booking", "GET A QUOTE ↗", "btn darkbtn")}<a href="tel:${CONTACT.phoneTel}" class="btn lightbtn" data-phone>CALL US</a></div></div></div>
 </main>
 ${footer(0)}
 ${floatActions("Hello Omkareshwar Travels, I would like a taxi quote.")}
@@ -557,11 +580,11 @@ ${nav(2)}
 <main>
 <section class="hero" style="--hero-image:url('${destHeroImage(route.slug, 2)}')"><div class="wrap heroGrid route-hero-grid">
  <div>
-  <p class="breadcrumb"><a href="../../">Home</a> / <a href="../../#destinations">Routes</a> / ${esc(route.name)}</p>
+  <p class="breadcrumb"><a href="../../">Home</a> / <a href="../../" data-scroll-target="destinations">Routes</a> / ${esc(route.name)}</p>
   <div class="eyebrow">${esc(route.category)}</div>
   <h1>${esc(route.name)} cab<br><em>from Hubli</em></h1>
   <p class="herop">${esc(copy.intro)}</p>
-  <div class="herobuttons"><a href="#booking" class="btn gold">Get ${esc(route.name)} Quote ↗</a><a class="btn outline" data-whatsapp-link data-wa-text="Hello, I need a Hubli to ${route.name} taxi." href="https://wa.me/${CONTACT.whatsapp}">WhatsApp</a><a href="tel:${CONTACT.phoneTel}" class="btn outline" data-phone>Call Now</a></div>
+  <div class="herobuttons">${bookingButton(`Get ${esc(route.name)} Quote ↗`, "btn gold")}<a class="btn outline" data-whatsapp-link data-wa-text="Hello, I need a Hubli to ${route.name} taxi." href="https://wa.me/${CONTACT.whatsapp}">WhatsApp</a><a href="tel:${CONTACT.phoneTel}" class="btn outline" data-phone>Call Now</a></div>
   <div class="route-meta">
    <div><strong>From Hubballi</strong><span>${esc(route.distanceFromHubli)}</span></div>
    <div><strong>Ideal stay</strong><span>${esc(route.idealDuration)}</span></div>
@@ -587,7 +610,7 @@ ${nav(2)}
  <aside class="route-sidebar">${bookingForm(route.name, 2, CONTACT.hubCity)}</aside>
 </div></section>
 <section class="route-related"><div class="wrap">${relatedRoutes(route.slug, 2)}</div></section>
-<div class="cta"><div class="wrap ctainner"><div><h2>Ready for ${esc(route.name)}?</h2><p>Share pickup in Hubli, travel dates, and group size — we reply on WhatsApp with fare options.</p></div><div class="ctabtns"><a href="#booking" class="btn darkbtn">WHATSAPP QUOTE ↗</a><a href="tel:${CONTACT.phoneTel}" class="btn lightbtn" data-phone>CALL</a></div></div></div>
+<div class="cta"><div class="wrap ctainner"><div><h2>Ready for ${esc(route.name)}?</h2><p>Share pickup in Hubli, travel dates, and group size — we reply on WhatsApp with fare options.</p></div><div class="ctabtns">${bookingButton("WHATSAPP QUOTE ↗", "btn darkbtn")}<a href="tel:${CONTACT.phoneTel}" class="btn lightbtn" data-phone>CALL</a></div></div></div>
 </main>
 ${footer(2)}
 ${floatActions(`Hello, I need a taxi to ${route.name}.`)}
