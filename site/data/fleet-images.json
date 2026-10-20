@@ -1,16 +1,14 @@
 {
   "sedan": {
     "file": "fleet/sedan.jpg",
-    "alt": "Maruti Suzuki Dzire sedan — typical outstation taxi in Karnataka",
-    "credit": "Biswarup Ganguly / CC BY 3.0 (Wikimedia Commons)"
+    "alt": "Maruti Suzuki Dzire sedan for Hubli outstation and local trips"
   },
   "suv": {
     "file": "fleet/suv.jpg",
-    "alt": "SUV / MUV for family outstation travel"
+    "alt": "SUV for family outstation travel from Hubballi"
   },
   "traveller": {
     "file": "fleet/tempo-traveller.jpg",
-    "alt": "Force Tempo Traveller minivan for group tours",
-    "credit": "Wikimedia Commons"
+    "alt": "Force Tempo Traveller for group tours and temple trips"
   }
 }
