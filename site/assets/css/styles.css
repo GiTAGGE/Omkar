@@ -125,6 +125,21 @@ footer{background:#101914;color:#dfe2da;padding:47px 0 20px}
 .footgrid p,.footgrid a{font-size:11px;color:#b8c0b6;line-height:2;display:block;margin:0 0 4px}
 .copyright{border-top:1px solid #303b33;padding-top:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#8f9b90;font-size:10px}
 .site-note{font-size:10px;color:#b9c3b9;padding:8px 0;background:#0c140f;text-align:center}
+.convertbar{background:#17221e;color:#e8ebe4;border-bottom:1px solid #2a382f}
+.convertgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:18px 0;align-items:center}
+.convertgrid strong{display:block;font-size:11px;color:#fff}
+.convertgrid small{display:block;font-size:10px;color:#b5c0b5;margin-top:3px}
+.convertgrid .btn{padding:11px 14px;font-size:11px;white-space:nowrap}
+.seo-hub{background:#eeece4;padding:48px 0}
+.seo-hub h2{font:500 26px Georgia,serif;color:#1b2921;margin:0 0 12px}
+.seo-hub p{font-size:12px;color:#697068;line-height:2;max-width:820px;margin:0 0 18px}
+.seo-links{display:flex;flex-wrap:wrap;gap:8px 14px}
+.seo-links a{font-size:11px;font-weight:700;color:#6d542a}
+.route-related{background:#f7f5ef;padding:40px 0 50px}
+.related-title{font:500 22px Georgia,serif;margin:6px 0 14px;color:#1b2921}
+.related-links{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.related-links a{font-size:12px;font-weight:700;color:#25352a;padding:12px 14px;background:#fff;border:1px solid #e8e5dc;border-radius:4px}
+.related-links a:hover{border-color:#c9a96a;color:#6d542a}
 .floatactions{position:fixed;right:16px;bottom:16px;z-index:20;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
 .floatwa,.floatcall{border-radius:30px;font-size:11px;font-weight:800;padding:13px 17px;box-shadow:0 4px 18px #0003}
 .floatwa{background:#23854d;color:white}
@@ -154,6 +169,9 @@ footer{background:#101914;color:#dfe2da;padding:47px 0 20px}
  .route-columns{grid-template-columns:1fr}
 }
 @media(max-width:760px){
+ .convertgrid{grid-template-columns:1fr 1fr;gap:12px}
+ .convertgrid .btn{grid-column:1/-1;justify-content:center}
+ .related-links{grid-template-columns:1fr}
  .links{display:none;position:absolute;top:78px;left:0;right:0;background:#17221e;padding:20px 5%;flex-direction:column;align-items:stretch;gap:16px;border-top:1px solid #344137}
  .links.open{display:flex}.menu{display:block}.navinner>.navcta{display:none}
  .heroGrid{grid-template-columns:1fr;padding:50px 0 56px;gap:32px}

@@ -63,8 +63,16 @@
   if (year) year.textContent = String(new Date().getFullYear());
 
   document.querySelectorAll("[data-phone]").forEach((el) => {
+    if (cfg.phoneTel && el.tagName === "A") {
+      el.setAttribute("href", "tel:" + String(cfg.phoneTel).replace(/\s/g, ""));
+    }
     if (cfg.phoneDisplay) el.textContent = cfg.phoneDisplay;
-    if (cfg.phoneTel && el.tagName === "A") el.setAttribute("href", "tel:" + cfg.phoneTel.replace(/\s/g, ""));
+  });
+
+  document.querySelectorAll("[data-email]").forEach((el) => {
+    if (!cfg.email) return;
+    if (el.tagName === "A") el.setAttribute("href", "mailto:" + cfg.email);
+    if (!el.textContent?.includes("@") || el.dataset.emailText === "replace") el.textContent = cfg.email;
   });
 
   document.querySelectorAll("[data-whatsapp-link]").forEach((el) => {
