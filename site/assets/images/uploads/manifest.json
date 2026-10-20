@@ -1,0 +1,54 @@
+{
+  "_comment": "Drop/replace files under uploads/, then npm run build. Missing files keep existing card.jpg/hero.jpg.",
+  "fleet": {
+    "sedan": "fleet/dzire-sedan.jpg",
+    "suv": "fleet/suv.jpg",
+    "traveller": "fleet/tempo-traveller.jpg"
+  },
+  "home": {
+    "hero": "destinations/hampi-hero-anjanadri.jpg",
+    "about": "destinations/coorg-rajas-seat.jpg"
+  },
+  "destinations": {
+    "hampi": {
+      "card": "destinations/hampi-card-stone-chariot.jpg",
+      "hero": "destinations/hampi-hero-anjanadri.jpg"
+    },
+    "hospet": {
+      "card": "destinations/hospet-hill-fort.jpg",
+      "hero": "destinations/hospet-hill-fort.jpg"
+    },
+    "coorg": {
+      "card": "destinations/coorg-rajas-seat.jpg",
+      "hero": "destinations/coorg-rajas-seat.jpg"
+    },
+    "udupi": {
+      "card": "destinations/udupi-coastal-rocks.jpg",
+      "hero": "destinations/udupi-coastal-rocks.jpg"
+    },
+    "gokarna": {
+      "card": "destinations/gokarna-om-beach.jpg",
+      "hero": "destinations/gokarna-om-beach.jpg"
+    },
+    "murudeshwar": {
+      "card": "destinations/murudeshwar-shiva-coast.jpg",
+      "hero": "destinations/murudeshwar-shiva-coast.jpg"
+    },
+    "goa": {
+      "card": "destinations/goa-beach.jpg",
+      "hero": "destinations/goa-beach.jpg"
+    },
+    "dandeli": {
+      "card": "destinations/dandeli-nature.jpg",
+      "hero": "destinations/dandeli-nature.jpg"
+    },
+    "belagavi": {
+      "card": "destinations/belagavi.jpg",
+      "hero": "destinations/belagavi.jpg"
+    },
+    "jog-falls": {
+      "card": "destinations/jog-falls.jpg",
+      "hero": "destinations/jog-falls.jpg"
+    }
+  }
+}
