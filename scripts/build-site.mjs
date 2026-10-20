@@ -12,7 +12,12 @@ const DOMAIN = CONTACT.domain;
 const HUB_LABEL = `${CONTACT.hubCity} (${CONTACT.hubCityAlt})`;
 
 const routes = JSON.parse(fs.readFileSync(path.join(site, "data", "routes.json"), "utf8"));
+const services = JSON.parse(fs.readFileSync(path.join(site, "data", "services.json"), "utf8"));
 const fleetImages = JSON.parse(fs.readFileSync(path.join(site, "data", "fleet-images.json"), "utf8"));
+
+function serviceBodyText(text) {
+  return String(text).replace(/\{phone\}/g, CONTACT.phoneDisplay);
+}
 
 function syncSiteConfig() {
   const js = `/** Auto-synced from site/data/site-contact.json on build — edit that file or phone/WhatsApp here. */
@@ -377,17 +382,44 @@ function nav(depth) {
 </header>`;
 }
 
-function bookingForm(prefillTo = "", depth = 0, defaultFrom = CONTACT.hubCity) {
-  const phTo = prefillTo ? esc(prefillTo) : "e.g. Goa, Hampi, Gokarna";
+function bookingForm(prefillTo = "", depth = 0, defaultFrom = CONTACT.hubCity, defaultTrip = "One Way", defaultVehicle = "") {
+  const tripOptions = ["One Way", "Round Trip", "Local Rental"];
+  const activeTrip = tripOptions.includes(defaultTrip) ? defaultTrip : "One Way";
+  const tabs = tripOptions
+    .map(
+      (t) =>
+        `<button type="button" class="tab${t === activeTrip ? " active" : ""}" data-trip="${t}">${t}</button>`
+    )
+    .join("");
+  const phTo =
+    prefillTo
+      ? esc(prefillTo)
+      : activeTrip === "Local Rental"
+        ? "e.g. Local sightseeing"
+        : "e.g. Goa, Hampi, Gokarna";
   const fromVal = defaultFrom ? ` value="${esc(defaultFrom)}"` : "";
+  const vehicleOptions = [
+    "No preference — suggest a vehicle",
+    "Hatchback / Sedan (Dzire / Etios)",
+    "SUV / MUV",
+    "Innova / Premium MUV",
+    "Tempo Traveller",
+    "Mini Bus / Bus"
+  ];
+  const vehicleSelect = vehicleOptions
+    .map((opt) => {
+      const sel = defaultVehicle && opt.includes(defaultVehicle) ? " selected" : "";
+      return `<option${sel}>${esc(opt)}</option>`;
+    })
+    .join("");
   return `<div class="booking" id="booking"><h2>Where can we take you?</h2><p class="sub">Share your trip details — we reply quickly on WhatsApp.</p>
-  <div class="tabs" role="group" aria-label="Trip type"><button type="button" class="tab active" data-trip="One Way">One Way</button><button type="button" class="tab" data-trip="Round Trip">Round Trip</button><button type="button" class="tab" data-trip="Local Rental">Local Rental</button></div>
-  <form id="bookingForm"><input type="hidden" id="tripType" value="One Way"><div class="fields">
+  <div class="tabs" role="group" aria-label="Trip type">${tabs}</div>
+  <form id="bookingForm"><input type="hidden" id="tripType" value="${esc(activeTrip)}"><div class="fields">
    <div class="field"><label for="from">PICKUP CITY</label><input id="from" name="pickup" placeholder="e.g. Hubballi"${fromVal} required autocomplete="address-level2"></div>
    <div class="field"><label for="to">DESTINATION</label><input id="to" name="destination" placeholder="${phTo}" value="${prefillTo ? esc(prefillTo) : ""}" required autocomplete="address-level2"></div>
    <div class="field"><label for="date">TRAVEL DATE</label><input type="date" id="date" name="date" required></div>
    <div class="field"><label for="passengers">PASSENGERS</label><select id="passengers" name="passengers"><option>1–3 passengers</option><option>4–6 passengers</option><option>7–12 passengers</option><option>13+ passengers</option></select></div>
-   <div class="field full"><label for="vehicle">PREFERRED VEHICLE</label><select id="vehicle" name="vehicle"><option>No preference — suggest a vehicle</option><option>Hatchback / Sedan (Dzire / Etios)</option><option>SUV / MUV</option><option>Innova / Premium MUV</option><option>Tempo Traveller</option><option>Mini Bus / Bus</option></select></div>
+   <div class="field full"><label for="vehicle">PREFERRED VEHICLE</label><select id="vehicle" name="vehicle">${vehicleSelect}</select></div>
   </div><button class="btn gold" type="submit">SEND QUOTE ON WHATSAPP &nbsp; ↗</button><p class="tiny">Instant WhatsApp enquiry · No payment required on this step</p><div class="notice" id="formResult" role="status" aria-live="polite"></div>
  </form>
  </div>`;
@@ -399,9 +431,15 @@ function footer(depth) {
     .slice(0, 6)
     .map((r) => `<a href="${p}routes/${r.slug}/">${r.name}</a>`)
     .join("");
+  const serviceLinks = services
+    .slice(0, 6)
+    .map((s) => `<a href="${p}${s.slug}/">${esc(s.shortName)}</a>`)
+    .join("");
+  const taxiHubLink = `<a href="${p}taxi-services/">All taxi services ↗</a>`;
   return `<footer id="contact"><div class="wrap"><div class="footgrid">
  <div>${brandLink(depth)}<p style="margin-top:15px;max-width:260px">Comfortable outstation cabs, local rentals, and airport transfers across Karnataka & Goa — planned around your schedule.</p></div>
- <div><h4>EXPLORE</h4>${scrollLink(depth, "fleet", "Our Fleet")}${scrollLink(depth, "services", "Taxi Services")}${scrollLink(depth, "destinations", "Tour Destinations")}${scrollLink(depth, "about", "About Us")}</div>
+ <div><h4>EXPLORE</h4>${scrollLink(depth, "fleet", "Our Fleet")}<a href="${p}taxi-services/">Taxi Services</a>${scrollLink(depth, "destinations", "Tour Destinations")}${scrollLink(depth, "about", "About Us")}</div>
+ <div><h4>TAXI SERVICES</h4>${serviceLinks}${taxiHubLink}</div>
  <div><h4>POPULAR ROUTES</h4>${routeLinks}${scrollLink(depth, "destinations", "View all routes ↗")}</div>
  <div><h4>GET IN TOUCH</h4><a href="tel:${CONTACT.phoneTel}" data-phone>${esc(CONTACT.phoneDisplay)}</a><a href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a><p>Based in ${esc(HUB_LABEL)}</p>${scrollLink(depth, "booking", "Send a trip enquiry ↗")}</div>
 </div><div class="copyright"><span>© <span id="year"></span> Omkareshwar Travels</span><span><a href="${p}privacy-policy/">Privacy Policy</a> &nbsp; · &nbsp; <a href="${p}terms/">Terms & Conditions</a></span></div></div>
@@ -425,10 +463,13 @@ function relatedRoutes(currentSlug, depth) {
 }
 
 function seoHubSection() {
-  const links = routes
+  const serviceLinks = services
+    .map((s) => `<a href="/${s.slug}/">${esc(s.shortName)} Hubli</a>`)
+    .join("");
+  const routeLinks = routes
     .map((r) => `<a href="/routes/${r.slug}/">Hubli to ${esc(r.name)} taxi</a>`)
     .join("");
-  return `<section class="seo-hub" aria-label="Service areas"><div class="wrap"><h2>Outstation taxi from Hubballi (Hubli)</h2><p>Omkareshwar Travels is your Hubli-based partner for high-intent bookings: airport and railway transfers, one-way drops, round trips, and multi-day tours. Request fares on WhatsApp at <a href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a> or call <a href="tel:${CONTACT.phoneTel}" data-phone>${esc(CONTACT.phoneDisplay)}</a>.</p><div class="seo-links">${links}</div></div></section>`;
+  return `<section class="seo-hub" aria-label="Service areas"><div class="wrap"><h2>Outstation taxi from Hubballi (Hubli)</h2><p>Omkareshwar Travels is your Hubli-based partner for high-intent bookings: <a href="/outstation-cab/">outstation cabs</a>, <a href="/airport-taxi/">airport taxis</a>, <a href="/local-taxi-hubli/">local rentals</a>, one-way drops, round trips, and multi-day tours. Request fares on WhatsApp at <a href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a> or call <a href="tel:${CONTACT.phoneTel}" data-phone>${esc(CONTACT.phoneDisplay)}</a>.</p><div class="seo-links seo-links-services">${serviceLinks}</div><div class="seo-links">${routeLinks}</div></div></section>`;
 }
 
 function scripts(depth) {
@@ -497,11 +538,11 @@ ${conversionStrip()}
 </div></section>
 <section class="services" id="services"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">MADE FOR YOUR PLANS</div><h2>One travel partner. Many journeys.</h2></div><p>Whether you know exactly where you're going or need help planning, start with the trip you have in mind.</p></div>
 <div class="servicegrid">
- <article class="service"><div class="si">↗</div><h3>Outstation Cabs</h3><p>Intercity rides for business, family visits, and spontaneous getaways.</p></article>
- <article class="service"><div class="si">◷</div><h3>Local Rentals</h3><p>Flexible local travel for errands, meetings, sightseeing, and events.</p></article>
- <article class="service"><div class="si">✈</div><h3>Airport Transfers</h3><p>Hubballi (HBX), Belagavi (IXG), Goa (GOI/GOX), and connection pickups aligned to your flight.</p></article>
- <article class="service"><div class="si">⌖</div><h3>Temple & Group Tours</h3><p>Bring family and friends together for meaningful journeys and holidays.</p></article>
-</div></div></section>
+ <a class="service servicelink" href="/outstation-cab/"><div class="si">↗</div><h3>Outstation Cabs</h3><p>Intercity rides for business, family visits, and spontaneous getaways.</p><span class="servicemore">Learn more ↗</span></a>
+ <a class="service servicelink" href="/local-taxi-hubli/"><div class="si">◷</div><h3>Local Rentals</h3><p>Flexible local travel for errands, meetings, sightseeing, and events.</p><span class="servicemore">Learn more ↗</span></a>
+ <a class="service servicelink" href="/airport-taxi/"><div class="si">✈</div><h3>Airport Transfers</h3><p>Hubballi (HBX), Belagavi (IXG), Goa (GOI/GOX), and connection pickups aligned to your flight.</p><span class="servicemore">Learn more ↗</span></a>
+ <a class="service servicelink" href="/tempo-traveller-rental/"><div class="si">⌖</div><h3>Temple & Group Tours</h3><p>Bring family and friends together for meaningful journeys and holidays.</p><span class="servicemore">Learn more ↗</span></a>
+</div><p class="muted" style="margin-top:14px;text-align:center"><a href="/taxi-services/">View all taxi services in Hubballi ↗</a> · <a href="/one-way-cab/">One way</a> · <a href="/round-trip-taxi/">Round trip</a> · <a href="/innova-cab-hubli/">Innova cab</a></p></div></section>
 <section id="destinations"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">GET INSPIRED</div><h2>Every road has a story.</h2></div><p>Top Karnataka & Goa routes from Hubballi (Hubli) — tap a destination for travel tips and instant WhatsApp quotes.</p></div>
 <div class="destgrid routes-all">
 ${allDestCards}
@@ -618,6 +659,186 @@ ${scripts(2)}
 </body></html>`;
 }
 
+function popularRoutesBlock(service, depth) {
+  const p = depth === 0 ? "" : "../".repeat(depth);
+  const picks = (service.popularRoutes || [])
+    .map((slug) => routes.find((r) => r.slug === slug))
+    .filter(Boolean);
+  if (!picks.length) return "";
+  const links = picks
+    .map((r) => `<a href="${p}routes/${r.slug}/">Hubli to ${esc(r.name)} taxi ↗</a>`)
+    .join("");
+  return `<div class="related-routes"><div class="eyebrow">POPULAR ROUTES</div><h2 class="related-title">Book with this service</h2><div class="related-links">${links}</div></div>`;
+}
+
+function otherServicesBlock(currentSlug, depth) {
+  const p = depth === 0 ? "" : "../".repeat(depth);
+  const picks = services.filter((s) => s.slug !== currentSlug).slice(0, 5);
+  const links = picks.map((s) => `<a href="${p}${s.slug}/">${esc(s.shortName)} ↗</a>`).join("");
+  return `<div class="related-routes" style="margin-top:24px"><div class="eyebrow">MORE SERVICES</div><h2 class="related-title">Other taxi options</h2><div class="related-links">${links}<a href="${p}taxi-services/">All services ↗</a></div></div>`;
+}
+
+function serviceDefaultVehicle(service) {
+  if (service.slug === "innova-cab-hubli") return "Innova";
+  if (service.slug === "tempo-traveller-rental") return "Tempo Traveller";
+  return "";
+}
+
+function servicePage(service) {
+  const depth = 1;
+  const url = `${DOMAIN}/${service.slug}/`;
+  const body = serviceBodyText(service.body);
+  const highlights = (service.highlights || []).map((h) => `<li>${esc(h)}</li>`).join("");
+  const faq = service.faq || [];
+  const faqHtml = faq
+    .map((f) => `<article><h3>${esc(f.q)}</h3><p>${esc(f.a)}</p></article>`)
+    .join("");
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a }
+    }))
+  };
+  const serviceLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.h1,
+    provider: { "@type": "TravelAgency", name: "Omkareshwar Travels", url: DOMAIN },
+    areaServed: { "@type": "City", name: "Hubballi" },
+    description: service.intro,
+    offers: {
+      "@type": "Offer",
+      availability: "https://schema.org/InStock",
+      priceCurrency: "INR",
+      url
+    }
+  };
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: DOMAIN + "/" },
+      { "@type": "ListItem", position: 2, name: "Taxi Services", item: DOMAIN + "/taxi-services/" },
+      { "@type": "ListItem", position: 3, name: service.shortName, item: url }
+    ]
+  };
+  const waText = `Hello Omkareshwar Travels, I need ${service.shortName} from Hubli.`;
+  const defaultVehicle = serviceDefaultVehicle(service);
+
+  return `${head({
+    title: service.metaTitle,
+    description: service.metaDescription,
+    keywords: service.metaKeywords,
+    canonical: url,
+    depth,
+    ogImage: absoluteImage(service.heroImage),
+    jsonLd: [businessJsonLd(), breadcrumb, serviceLd, faqLd]
+  })}
+<body>
+${topBar()}
+${nav(depth)}
+<main>
+<section class="hero" style="--hero-image:url('${imagePath(depth, service.heroImage)}')"><div class="wrap heroGrid route-hero-grid">
+ <div>
+  <p class="breadcrumb"><a href="../">Home</a> / <a href="../taxi-services/">Taxi Services</a> / ${esc(service.shortName)}</p>
+  <div class="eyebrow">${esc(service.eyebrow)}</div>
+  <h1>${esc(service.h1)}<br><em>${esc(service.h1Em)}</em></h1>
+  <p class="herop">${esc(service.intro)}</p>
+  <div class="herobuttons">${bookingButton(`Book ${esc(service.shortName)} ↗`, "btn gold")}<a class="btn outline" data-whatsapp-link data-wa-text="${esc(waText)}" href="https://wa.me/${CONTACT.whatsapp}">WhatsApp</a><a href="tel:${CONTACT.phoneTel}" class="btn outline" data-phone>Call ${esc(CONTACT.phoneDisplay)}</a></div>
+  <div class="route-meta">
+   <div><strong>Based in</strong><span>${esc(HUB_LABEL)}</span></div>
+   <div><strong>Quote</strong><span>WhatsApp or phone</span></div>
+   <div><strong>Fleet</strong><span>Sedan · SUV · Innova · Traveller</span></div>
+   <div><strong>Service</strong><span>${esc(service.shortName)}</span></div>
+  </div>
+ </div>
+</div></section>
+<section class="route-body"><div class="wrap route-columns">
+ <div>
+  <h2>${esc(service.shortName)} from Hubballi — what you get</h2>
+  <p>${esc(body)}</p>
+  <h3>Why book with Omkareshwar Travels</h3>
+  <ul>${highlights}</ul>
+  <p>Call <a href="tel:${CONTACT.phoneTel}" data-phone>${esc(CONTACT.phoneDisplay)}</a> or send your pickup, destination, date, and passenger count on WhatsApp for a clear fare before you travel.</p>
+  <div class="route-faq" style="margin-top:24px">
+   <div class="eyebrow">FAQ</div>
+   <h2 style="font:500 24px Georgia,serif;margin:8px 0 16px">Common questions</h2>
+   ${faqHtml}
+  </div>
+  ${otherServicesBlock(service.slug, depth)}
+ </div>
+ <aside class="route-sidebar">${bookingForm("", depth, CONTACT.hubCity, service.defaultTrip, defaultVehicle)}</aside>
+</div></section>
+<section class="route-related"><div class="wrap">${popularRoutesBlock(service, depth)}</div></section>
+<div class="cta"><div class="wrap ctainner"><div><h2>Book ${esc(service.shortName)} today</h2><p>High-intent travel deserves a fast reply — share your trip on WhatsApp and we confirm vehicle and pricing.</p></div><div class="ctabtns">${bookingButton("GET QUOTE ↗", "btn darkbtn")}<a href="tel:${CONTACT.phoneTel}" class="btn lightbtn" data-phone>CALL NOW</a></div></div></div>
+</main>
+${footer(depth)}
+${floatActions(waText)}
+${scripts(depth)}
+</body></html>`;
+}
+
+function taxiServicesHubPage() {
+  const depth = 1;
+  const url = `${DOMAIN}/taxi-services/`;
+  const title = "Taxi Services Hubli | Outstation, Airport & Local Cabs | Omkareshwar Travels";
+  const description =
+    "Hubballi (Hubli) taxi services: outstation cab, airport transfer, local rental, one-way drop, round trip, Innova & Tempo Traveller. WhatsApp quotes.";
+  const cards = services
+    .map(
+      (s) =>
+        `<a class="dest service-hub-card" href="../${s.slug}/"><img src="${imagePath(depth, s.heroImage)}" alt="${esc(s.shortName)} in Hubballi" width="800" height="600" loading="lazy" decoding="async"><div class="destinfo"><small>${esc(s.eyebrow)}</small><h3>${esc(s.shortName)}</h3><span>${esc(s.intro.slice(0, 90))}… ↗</span></div></a>`
+    )
+    .join("\n");
+  return `${head({
+    title,
+    description,
+    keywords:
+      "taxi services Hubli, Hubballi cab booking, outstation taxi Karnataka, airport cab Hubballi, Omkareshwar Travels services",
+    canonical: url,
+    depth,
+    ogImage: absoluteImage("home/hero.jpg"),
+    jsonLd: [
+      businessJsonLd(),
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: DOMAIN + "/" },
+          { "@type": "ListItem", position: 2, name: "Taxi Services", item: url }
+        ]
+      }
+    ]
+  })}
+<body>
+${topBar()}
+${nav(depth)}
+<main>
+<section class="hero" style="--hero-image:url('${imagePath(depth, "home/hero.jpg")}')"><div class="wrap heroGrid route-hero-grid">
+ <div>
+  <p class="breadcrumb"><a href="../">Home</a> / Taxi Services</p>
+  <div class="eyebrow">HUBLI · HUBBALLI TAXI BOOKING</div>
+  <h1>Taxi services<br><em>from Hubballi</em></h1>
+  <p class="herop">Dedicated landing pages for Google Ads and organic search — outstation cabs, airport taxis, local rentals, one-way drops, round trips, Innova, and Tempo Traveller group travel.</p>
+  <div class="herobuttons">${bookingButton("Request a quote ↗", "btn gold")}<a class="btn outline" data-whatsapp-link data-wa-text="Hello, I need a taxi from Hubli." href="https://wa.me/${CONTACT.whatsapp}">WhatsApp</a></div>
+ </div>
+</div></section>
+<section id="destinations"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">CHOOSE YOUR SERVICE</div><h2>Book the trip type you need.</h2></div><p>Each page explains fares, FAQs, and popular routes — then you enquire on WhatsApp in one tap.</p></div>
+<div class="destgrid routes-all">
+${cards}
+</div></div></section>
+${seoHubSection().replace(/href="\//g, 'href="../')}
+<div class="cta"><div class="wrap ctainner"><div><h2>Not sure which service fits?</h2><p>Message your pickup and destination — we suggest the right cab and trip type.</p></div><div class="ctabtns">${bookingButton("WHATSAPP QUOTE ↗", "btn darkbtn")}<a href="tel:${CONTACT.phoneTel}" class="btn lightbtn" data-phone>CALL</a></div></div></div>
+</main>
+${footer(depth)}
+${floatActions("Hello Omkareshwar Travels, I need a taxi from Hubli.")}
+${scripts(depth)}
+</body></html>`;
+}
+
 function legalPage(kind) {
   const isPrivacy = kind === "privacy";
   const slug = isPrivacy ? "privacy-policy" : "terms";
@@ -671,11 +892,19 @@ for (const route of routes) {
   write(path.join(dist, "routes", route.slug, "index.html"), routePage(route));
 }
 
+for (const service of services) {
+  write(path.join(dist, service.slug, "index.html"), servicePage(service));
+}
+
+write(path.join(dist, "taxi-services", "index.html"), taxiServicesHubPage());
+
 write(path.join(dist, "privacy-policy", "index.html"), legalPage("privacy"));
 write(path.join(dist, "terms", "index.html"), legalPage("terms"));
 
 const urls = [
   { loc: DOMAIN + "/", priority: "1.0" },
+  { loc: DOMAIN + "/taxi-services/", priority: "0.92" },
+  ...services.map((s) => ({ loc: `${DOMAIN}/${s.slug}/`, priority: "0.95" })),
   ...routes.map((r) => ({ loc: `${DOMAIN}/routes/${r.slug}/`, priority: "0.9" })),
   { loc: DOMAIN + "/privacy-policy/", priority: "0.3" },
   { loc: DOMAIN + "/terms/", priority: "0.3" }
@@ -706,4 +935,4 @@ write(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#17221e" stroke="#d9b66f"/><text x="50" y="58" text-anchor="middle" fill="#d9b66f" font-family="Georgia,serif" font-size="42">O</text></svg>`
 );
 
-console.log("Built", dist, "—", routes.length, "routes");
+console.log("Built", dist, "—", routes.length, "routes,", services.length, "services");
