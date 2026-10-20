@@ -11,6 +11,7 @@ const DOMAIN = CONTACT.domain;
 const HUB_LABEL = `${CONTACT.hubCity} (${CONTACT.hubCityAlt})`;
 
 const routes = JSON.parse(fs.readFileSync(path.join(site, "data", "routes.json"), "utf8"));
+const fleetImages = JSON.parse(fs.readFileSync(path.join(site, "data", "fleet-images.json"), "utf8"));
 
 function syncSiteConfig() {
   const js = `/** Auto-synced from site/data/site-contact.json on build — edit that file or phone/WhatsApp here. */
@@ -265,6 +266,8 @@ function head({ title, description, keywords, canonical, depth = 0, jsonLd = [] 
 <meta name="twitter:description" content="${esc(description)}">
 <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
 <link rel="dns-prefetch" href="https://images.unsplash.com">
+<link rel="preconnect" href="https://upload.wikimedia.org" crossorigin>
+<link rel="dns-prefetch" href="https://upload.wikimedia.org">
 <link rel="preconnect" href="https://wa.me">
 <link rel="dns-prefetch" href="https://wa.me">
 <link rel="stylesheet" href="${ap}/css/styles.css">
@@ -343,7 +346,7 @@ function bookingForm(prefillTo = "", depth = 0, defaultFrom = CONTACT.hubCity) {
    <div class="field"><label for="to">DESTINATION</label><input id="to" name="destination" placeholder="${phTo}" value="${prefillTo ? esc(prefillTo) : ""}" required autocomplete="address-level2"></div>
    <div class="field"><label for="date">TRAVEL DATE</label><input type="date" id="date" name="date" required></div>
    <div class="field"><label for="passengers">PASSENGERS</label><select id="passengers" name="passengers"><option>1–3 passengers</option><option>4–6 passengers</option><option>7–12 passengers</option><option>13+ passengers</option></select></div>
-   <div class="field full"><label for="vehicle">PREFERRED VEHICLE</label><select id="vehicle" name="vehicle"><option>No preference — suggest a vehicle</option><option>Hatchback / Sedan</option><option>SUV / MUV</option><option>Innova / Premium MUV</option><option>Tempo Traveller</option><option>Mini Bus / Bus</option></select></div>
+   <div class="field full"><label for="vehicle">PREFERRED VEHICLE</label><select id="vehicle" name="vehicle"><option>No preference — suggest a vehicle</option><option>Hatchback / Sedan (Dzire / Etios)</option><option>SUV / MUV</option><option>Innova / Premium MUV</option><option>Tempo Traveller</option><option>Mini Bus / Bus</option></select></div>
   </div><button class="btn gold" type="submit">SEND QUOTE ON WHATSAPP &nbsp; ↗</button><p class="tiny">Instant WhatsApp enquiry · No payment required on this step</p><div class="notice" id="formResult" role="status" aria-live="polite"></div>
  </form>
  </div>`;
@@ -445,10 +448,10 @@ ${conversionStrip()}
 </div></div>
 <section id="fleet"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">TRAVEL YOUR WAY</div><h2>Find your perfect ride.</h2></div><p>From quick city journeys to group adventures, choose a vehicle that suits your people and your plans.</p></div>
 <div class="fleet">
- <article class="car"><div class="carimg"><img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80" alt="Modern sedan car" width="800" height="533" loading="lazy" decoding="async"><span class="tag">EVERYDAY COMFORT</span></div><div class="carbody"><h3>Sedan</h3><div class="muted">A comfortable choice for smaller groups</div><div class="specs"><span>♙ 1–4 people</span><span>✓ City & outstation</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="Hatchback / Sedan">SELECT ↗</button></div></div></article>
- <article class="car"><div class="carimg"><img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=800&q=80" alt="SUV for family travel" width="800" height="533" loading="lazy" decoding="async"><span class="tag">FAMILY FAVOURITE</span></div><div class="carbody"><h3>SUV / MUV</h3><div class="muted">Extra room for family and luggage</div><div class="specs"><span>♙ 4–7 people</span><span>✓ Road trips</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="SUV / MUV">SELECT ↗</button></div></div></article>
- <article class="car"><div class="carimg"><img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=800&q=80" alt="Passenger minibus for group travel" width="800" height="533" loading="lazy" decoding="async"><span class="tag">GROUP JOURNEYS</span></div><div class="carbody"><h3>Tempo Traveller</h3><div class="muted">Bring everyone along for the ride</div><div class="specs"><span>♙ Group seating</span><span>✓ Tours & events</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="Tempo Traveller">SELECT ↗</button></div></div></article>
-</div><p class="muted" style="margin-top:14px">Vehicle models, seating, and availability are confirmed when you enquire. Images are representative.</p>
+ <article class="car"><div class="carimg"><img src="${fleetImages.sedan.src}" alt="${esc(fleetImages.sedan.alt)}" width="960" height="640" loading="lazy" decoding="async"><span class="tag">EVERYDAY COMFORT</span></div><div class="carbody"><h3>Sedan</h3><div class="muted">Dzire / Etios class — ideal for couples & small families</div><div class="specs"><span>♙ 1–4 people</span><span>✓ City & outstation</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="Hatchback / Sedan">SELECT ↗</button></div></div></article>
+ <article class="car"><div class="carimg"><img src="${fleetImages.suv.src}" alt="${esc(fleetImages.suv.alt)}" width="800" height="533" loading="lazy" decoding="async"><span class="tag">FAMILY FAVOURITE</span></div><div class="carbody"><h3>SUV / MUV</h3><div class="muted">Innova / Ertiga class — extra room for family and luggage</div><div class="specs"><span>♙ 4–7 people</span><span>✓ Road trips</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="SUV / MUV">SELECT ↗</button></div></div></article>
+ <article class="car"><div class="carimg"><img src="${fleetImages.traveller.src}" alt="${esc(fleetImages.traveller.alt)}" width="960" height="640" loading="lazy" decoding="async"><span class="tag">GROUP JOURNEYS</span></div><div class="carbody"><h3>Tempo Traveller</h3><div class="muted">Force Traveller — 12 to 17 seater group tours</div><div class="specs"><span>♙ Group seating</span><span>✓ Tours & events</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="Tempo Traveller">SELECT ↗</button></div></div></article>
+</div><p class="muted" style="margin-top:14px">Vehicle models, seating, and availability are confirmed when you enquire. Fleet photos show typical Dzire-class sedans and Tempo Traveller vans used on Karnataka routes.</p>
 </div></section>
 <section class="services" id="services"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">MADE FOR YOUR PLANS</div><h2>One travel partner. Many journeys.</h2></div><p>Whether you know exactly where you're going or need help planning, start with the trip you have in mind.</p></div>
 <div class="servicegrid">
