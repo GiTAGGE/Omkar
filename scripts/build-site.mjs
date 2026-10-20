@@ -6,14 +6,24 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const dist = path.join(root, "dist");
 const site = path.join(root, "site");
-const DOMAIN = "https://omkareshwartravels.com";
+const CONTACT = JSON.parse(fs.readFileSync(path.join(site, "data", "site-contact.json"), "utf8"));
+const DOMAIN = CONTACT.domain;
+const HUB_LABEL = `${CONTACT.hubCity} (${CONTACT.hubCityAlt})`;
 
 const routes = JSON.parse(fs.readFileSync(path.join(site, "data", "routes.json"), "utf8"));
+
+function syncSiteConfig() {
+  const js = `/** Auto-synced from site/data/site-contact.json on build — edit that file or phone/WhatsApp here. */
+window.OT_SITE = ${JSON.stringify(CONTACT, null, 2)};
+`;
+  fs.writeFileSync(path.join(site, "assets", "js", "site-config.js"), js, "utf8");
+}
+syncSiteConfig();
 
 const routeCopy = {
   dandeli: {
     intro:
-      "Dandeli pairs Kali River adventure with calm Western Ghats forests — ideal for families and friend groups who want rafting, nature walks, and a comfortable road trip from Belagavi or Hubballi.",
+      "Dandeli pairs Kali River adventure with calm Western Ghats forests — ideal for families and friend groups who want rafting, nature walks, and a comfortable road trip from Hubballi (Hubli).",
     highlights: [
       "White-water rafting and coracle rides on the Kali River",
       "Dandeli Wildlife Sanctuary and birding trails",
@@ -38,7 +48,7 @@ const routeCopy = {
       "Mahabaleshwar Temple and beach hopping",
       "Om Beach, Kudle, and Half Moon Bay viewpoints",
       "Coastal drives via Karwar or Murudeshwar",
-      "Ideal long weekend from Belagavi"
+      "Ideal long weekend from Hubballi"
     ],
     faq: [
       {
@@ -57,7 +67,7 @@ const routeCopy = {
     highlights: [
       "Murudeshwar Temple and Raja Gopura views",
       "Statue Park and Arabian Sea promenade",
-      "Day trips from Udupi, Gokarna, or Belagavi",
+      "Day trips from Udupi, Gokarna, or Hubballi",
       "Combine with Jog Falls or Coorg on longer tours"
     ],
     faq: [
@@ -73,7 +83,7 @@ const routeCopy = {
   },
   goa: {
     intro:
-      "From Belagavi, Goa is a short, high-demand route for beaches, weddings, and airport transfers. Book clear one-way or round-trip cabs with transparent per-km discussions before you travel.",
+      "From Hubballi (Hubli), Goa is one of our busiest routes for beaches, weddings, and airport transfers. Book clear one-way or round-trip cabs with transparent fare discussions before you travel.",
     highlights: [
       "North Goa beaches and nightlife hubs",
       "South Goa’s quieter resorts and churches",
@@ -82,8 +92,8 @@ const routeCopy = {
     ],
     faq: [
       {
-        q: "Belagavi to Goa travel time?",
-        a: "Typically 2.5–3.5 hours depending on border traffic and your drop location in North or South Goa."
+        q: "Hubli to Goa travel time?",
+        a: "Typically 3–4 hours depending on border traffic and whether you are headed to North or South Goa."
       },
       {
         q: "Inter-state permits?",
@@ -93,7 +103,7 @@ const routeCopy = {
   },
   hospet: {
     intro:
-      "Hospet is the practical base for Hampi, Tungabhadra Dam, and heritage circuits. Our outstation taxis from Belagavi and Hubballi keep your group together with AC comfort on NH48/NH67.",
+      "Hospet is the practical base for Hampi, Tungabhadra Dam, and heritage circuits. Our outstation taxis from Hubballi keep your group together with AC comfort on well-travelled NH routes.",
     highlights: [
       "Gateway stays for Hampi UNESCO sites",
       "Tungabhadra Dam and sunset viewpoints",
@@ -133,21 +143,21 @@ const routeCopy = {
   },
   belagavi: {
     intro:
-      "Belagavi (Belgaum) is our home ground — airport pickups, railway station drops, corporate rentals, and weddings. Start every Karnataka or Goa journey here with a trusted local operator.",
+      "Belagavi (Belgaum) is a frequent outstation trip from Hubballi — for IXG airport drops, family visits, and business travel. We run comfortable one-way and round-trip cabs with clear pricing on WhatsApp.",
     highlights: [
-      "Belagavi Airport (IXG) and railway station transfers",
-      "Intra-city rentals for meetings and events",
-      "Outstation hub for Goa, Dandeli, and Hampi",
-      "Corporate and family fleet options"
+      "Hubballi to Belagavi same-day returns",
+      "Belagavi Airport (IXG) connections from Hubli",
+      "Corporate and wedding guest transfers",
+      "Continue to Goa or Maharashtra border routes"
     ],
     faq: [
       {
-        q: "Do you offer hourly local packages?",
-        a: "Yes — share hours, stops, and passenger count for sedan, SUV, or traveller local rental quotes."
+        q: "Hubli to Belagavi travel time?",
+        a: "Usually about 2 hours via NH48, depending on traffic near Khanapur and city entry points."
       },
       {
-        q: "Pickup from IXG airport?",
-        a: "Send flight number and landing time on WhatsApp; we track delays when you share updates."
+        q: "Can you drop at IXG airport?",
+        a: "Yes — share flight time and terminal; we plan pickup from Hubballi accordingly."
       }
     ]
   },
@@ -158,7 +168,7 @@ const routeCopy = {
       "Madikeri Fort, Raja’s Seat, and Abbey Falls",
       "Coffee estate stays and plantation walks",
       "Dubare, Nisargadhama, and Talacauvery trips",
-      "Multi-day family tours from Belagavi"
+      "Multi-day family tours from Hubballi"
     ],
     faq: [
       {
@@ -198,7 +208,7 @@ const routeCopy = {
       "Raja, Roarer, Rocket, and Rani falls viewpoints",
       "Monsoon photography and nature drives",
       "Pair with Shimoga, Sringeri, or coastal routes",
-      "Day trip or overnight from Belagavi"
+      "Day trip or overnight from Hubballi"
     ],
     faq: [
       {
@@ -207,7 +217,7 @@ const routeCopy = {
       },
       {
         q: "Is same-day return feasible?",
-        a: "Yes from Belagavi with an early start; overnight near Sagara is easier for families."
+        a: "Yes from Hubballi with an early start; overnight near Sagara is easier for families."
       }
     ]
   }
@@ -255,6 +265,8 @@ function head({ title, description, keywords, canonical, depth = 0, jsonLd = [] 
 <meta name="twitter:description" content="${esc(description)}">
 <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
 <link rel="dns-prefetch" href="https://images.unsplash.com">
+<link rel="preconnect" href="https://wa.me">
+<link rel="dns-prefetch" href="https://wa.me">
 <link rel="stylesheet" href="${ap}/css/styles.css">
 <link rel="icon" href="${ap}/img/logo-mark.svg" type="image/svg+xml">
 ${ld}
@@ -265,28 +277,42 @@ function businessJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
-    name: "Omkareshwar Travels",
+    name: CONTACT.businessName,
     url: DOMAIN,
     logo: DOMAIN + "/assets/img/logo-mark.svg",
     image: DOMAIN + "/assets/img/logo-mark.svg",
-    telephone: "+919845012345",
-    email: "bookings@omkareshwartravels.com",
+    telephone: CONTACT.phoneTel,
+    email: CONTACT.email,
     priceRange: "₹₹",
-    areaServed: ["Karnataka", "Goa", "Belagavi", "Hubballi"],
+    areaServed: ["Karnataka", "Goa", "Hubballi", "Hubli", "Dharwad", "Belagavi"],
     address: {
       "@type": "PostalAddress",
-      streetAddress: "CTS No. 1234, Station Road",
-      addressLocality: "Belagavi",
-      addressRegion: "Karnataka",
-      postalCode: "590001",
-      addressCountry: "IN"
+      streetAddress: CONTACT.address.streetAddress,
+      addressLocality: CONTACT.address.addressLocality,
+      addressRegion: CONTACT.address.addressRegion,
+      postalCode: CONTACT.address.postalCode,
+      addressCountry: CONTACT.address.addressCountry
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 15.3647,
+      longitude: 75.124
     },
     sameAs: [DOMAIN]
   };
 }
 
 function topBar() {
-  return `<div class="top"><div class="wrap"><span>THOUGHTFUL JOURNEYS. COMFORTABLE RIDES.</span><span><a class="tel-top" href="tel:+919845012345" data-phone>+91 98450 12345</a> · Outstation · Local · Airport</span></div></div>`;
+  return `<div class="top"><div class="wrap"><span>HUBBALLI (HUBLI) · OUTSTATION & LOCAL TAXIS</span><span><a class="tel-top" href="tel:${CONTACT.phoneTel}" data-phone>${esc(CONTACT.phoneDisplay)}</a> · <a class="tel-top" href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a></span></div></div>`;
+}
+
+function conversionStrip() {
+  return `<div class="convertbar"><div class="wrap convertgrid">
+ <div><strong>Instant WhatsApp quotes</strong><small>Share route & dates — fast reply</small></div>
+ <div><strong>Hubli / Hubballi pickups</strong><small>Railway, bus stand & city</small></div>
+ <div><strong>AC fleet</strong><small>Sedan · SUV · Innova · Traveller</small></div>
+ <div><a class="btn gold" href="#booking">BOOK ON WHATSAPP ↗</a></div>
+</div></div>`;
 }
 
 function nav(depth) {
@@ -307,12 +333,13 @@ function nav(depth) {
 </header>`;
 }
 
-function bookingForm(prefillTo = "", depth = 0) {
-  const phTo = prefillTo ? esc(prefillTo) : "e.g. Bengaluru";
+function bookingForm(prefillTo = "", depth = 0, defaultFrom = CONTACT.hubCity) {
+  const phTo = prefillTo ? esc(prefillTo) : "e.g. Goa, Hampi, Gokarna";
+  const fromVal = defaultFrom ? ` value="${esc(defaultFrom)}"` : "";
   return `<div class="booking" id="booking"><h2>Where can we take you?</h2><p class="sub">Share your trip details — we reply quickly on WhatsApp.</p>
   <div class="tabs" role="group" aria-label="Trip type"><button type="button" class="tab active" data-trip="One Way">One Way</button><button type="button" class="tab" data-trip="Round Trip">Round Trip</button><button type="button" class="tab" data-trip="Local Rental">Local Rental</button></div>
   <form id="bookingForm"><input type="hidden" id="tripType" value="One Way"><div class="fields">
-   <div class="field"><label for="from">PICKUP CITY</label><input id="from" name="pickup" placeholder="e.g. Belagavi" required autocomplete="address-level2"></div>
+   <div class="field"><label for="from">PICKUP CITY</label><input id="from" name="pickup" placeholder="e.g. Hubballi"${fromVal} required autocomplete="address-level2"></div>
    <div class="field"><label for="to">DESTINATION</label><input id="to" name="destination" placeholder="${phTo}" value="${prefillTo ? esc(prefillTo) : ""}" required autocomplete="address-level2"></div>
    <div class="field"><label for="date">TRAVEL DATE</label><input type="date" id="date" name="date" required></div>
    <div class="field"><label for="passengers">PASSENGERS</label><select id="passengers" name="passengers"><option>1–3 passengers</option><option>4–6 passengers</option><option>7–12 passengers</option><option>13+ passengers</option></select></div>
@@ -332,16 +359,32 @@ function footer(depth) {
  <div><a class="brand" href="${p}#home"><span class="mark">O</span><span class="brandname">OMKARESHWAR<small>TRAVELS</small></span></a><p style="margin-top:15px;max-width:260px">Comfortable outstation cabs, local rentals, and airport transfers across Karnataka & Goa — planned around your schedule.</p></div>
  <div><h4>EXPLORE</h4><a href="${p}#fleet">Our Fleet</a><a href="${p}#services">Taxi Services</a><a href="${p}#destinations">Tour Destinations</a><a href="${p}#about">About Us</a></div>
  <div><h4>POPULAR ROUTES</h4>${routeLinks}<a href="${p}#destinations">View all routes ↗</a></div>
- <div><h4>GET IN TOUCH</h4><a href="tel:+919845012345" data-phone>+91 98450 12345</a><p>bookings@omkareshwartravels.com</p><p>omkareshwartravels.com</p><a href="${p}#booking">Send a trip enquiry ↗</a></div>
+ <div><h4>GET IN TOUCH</h4><a href="tel:${CONTACT.phoneTel}" data-phone>${esc(CONTACT.phoneDisplay)}</a><a href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a><p>Based in ${esc(HUB_LABEL)}</p><a href="${p}#booking">Send a trip enquiry ↗</a></div>
 </div><div class="copyright"><span>© <span id="year"></span> Omkareshwar Travels</span><span><a href="${p}privacy-policy/">Privacy Policy</a> &nbsp; · &nbsp; <a href="${p}terms/">Terms & Conditions</a></span></div></div>
-<div class="site-note">Trusted taxi & tour partner · Belagavi · Karnataka & Goa routes · Book via call or WhatsApp for instant quotes</div></footer>`;
+<div class="site-note">Outstation & local taxis · ${esc(HUB_LABEL)} · Karnataka & Goa · Call or WhatsApp for same-day quotes</div></footer>`;
 }
 
 function floatActions(waText) {
   return `<div class="floatactions" aria-label="Quick contact">
-<a class="floatcall" href="tel:+919845012345" data-phone>✆ &nbsp; CALL NOW</a>
-<a class="floatwa" data-whatsapp-link data-wa-text="${esc(waText)}" href="https://wa.me/919845012345" rel="noopener">WhatsApp &nbsp; ↗</a>
+<a class="floatcall" href="tel:${CONTACT.phoneTel}" data-phone>✆ &nbsp; CALL NOW</a>
+<a class="floatwa" data-whatsapp-link data-wa-text="${esc(waText)}" href="https://wa.me/${CONTACT.whatsapp}" rel="noopener">WhatsApp &nbsp; ↗</a>
 </div>`;
+}
+
+function relatedRoutes(currentSlug, depth) {
+  const p = depth === 0 ? "" : "../".repeat(depth);
+  const picks = routes.filter((r) => r.slug !== currentSlug).slice(0, 4);
+  const links = picks
+    .map((r) => `<a href="${p}routes/${r.slug}/">${esc(r.name)} taxi ↗</a>`)
+    .join("");
+  return `<div class="related-routes"><div class="eyebrow">MORE ROUTES FROM HUBLI</div><h2 class="related-title">Popular outstation cabs</h2><div class="related-links">${links}</div></div>`;
+}
+
+function seoHubSection() {
+  const links = routes
+    .map((r) => `<a href="/routes/${r.slug}/">Hubli to ${esc(r.name)} taxi</a>`)
+    .join("");
+  return `<section class="seo-hub" aria-label="Service areas"><div class="wrap"><h2>Outstation taxi from Hubballi (Hubli)</h2><p>Omkareshwar Travels is your Hubli-based partner for high-intent bookings: airport and railway transfers, one-way drops, round trips, and multi-day tours. Request fares on WhatsApp at <a href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a> or call <a href="tel:${CONTACT.phoneTel}" data-phone>${esc(CONTACT.phoneDisplay)}</a>.</p><div class="seo-links">${links}</div></div></section>`;
 }
 
 function scripts(depth) {
@@ -354,15 +397,15 @@ function homePage() {
   const allDestCards = routes
     .map(
       (r, i) =>
-        `<a href="/routes/${r.slug}/" class="dest"${i === 0 ? "" : ""}><img src="${r.cardImage}" alt="${esc(r.name)} taxi route from Belagavi" width="800" height="600" loading="lazy" decoding="async"><div class="destinfo"><small>${esc(r.category)}</small><h3>${esc(r.name)}</h3><span>${esc(r.tagline)} ↗</span></div></a>`
+        `<a href="/routes/${r.slug}/" class="dest"><img src="${r.cardImage}" alt="${esc(r.name)} taxi from Hubli Hubballi" width="800" height="600" loading="lazy" decoding="async"><div class="destinfo"><small>${esc(r.category)}</small><h3>${esc(r.name)}</h3><span>${esc(r.tagline)} ↗</span></div></a>`
     )
     .join("\n");
 
-  const title = "Omkareshwar Travels | Outstation Cabs Belagavi, Goa & Karnataka";
+  const title = "Omkareshwar Travels | Hubli Hubballi Outstation Cabs & Goa Taxi";
   const desc =
-    "Book outstation taxis, local rentals & airport transfers from Belagavi. Sedan, SUV, Innova & Tempo Traveller to Goa, Hampi, Dandeli, Gokarna & more. WhatsApp quotes.";
+    "Book outstation taxis from Hubballi (Hubli). Sedan, SUV, Innova & Tempo Traveller to Goa, Hampi, Dandeli, Gokarna, Belagavi & more. WhatsApp quotes & calls.";
   const keywords =
-    "Belagavi taxi, outstation cab Karnataka, Goa taxi from Belagavi, Hampi cab, airport transfer Belagavi, Omkareshwar Travels";
+    "Hubli taxi, Hubballi outstation cab, Goa taxi from Hubli, Hampi cab Hubballi, airport transfer Hubli, Omkareshwar Travels";
 
   return `${head({
     title,
@@ -390,9 +433,10 @@ ${topBar(0)}
 ${nav(0)}
 <main>
 <section class="hero" id="home" style="--hero-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=85')"><div class="wrap heroGrid">
- <div><div class="eyebrow">A BETTER WAY TO TRAVEL</div><h1>Your journey.<br><em>Our commitment.</em></h1><p class="herop">From Belagavi to Goa, Hampi, and the coast — comfortable outstation cabs and local rentals with clear WhatsApp quotes and personal service.</p><div class="herobuttons"><a href="#booking" class="btn gold">Plan Your Journey ↗</a><a href="#fleet" class="btn outline">Explore Our Fleet</a></div><div class="micro"><span>Comfort-first travel</span><span>Karnataka & Goa routes</span><span>WhatsApp enquiries</span></div></div>
- ${bookingForm("", 0)}
+ <div><div class="eyebrow">HUBBALLI (HUBLI) TAXI SERVICE</div><h1>Your journey.<br><em>Our commitment.</em></h1><p class="herop">From Hubli to Goa, Hampi, the coast, and beyond — comfortable outstation cabs and local rentals with clear WhatsApp quotes, same-day availability, and personal service.</p><div class="herobuttons"><a href="#booking" class="btn gold">Plan Your Journey ↗</a><a class="btn outline" data-whatsapp-link data-wa-text="Hello Omkareshwar Travels, I need a cab from Hubli." href="https://wa.me/${CONTACT.whatsapp}">Chat on WhatsApp</a><a href="tel:${CONTACT.phoneTel}" class="btn outline" data-phone>Call Now</a></div><div class="micro"><span>Hubli & Hubballi pickups</span><span>Karnataka & Goa routes</span><span>Fast WhatsApp quotes</span></div></div>
+ ${bookingForm("", 0, CONTACT.hubCity)}
 </div></section>
+${conversionStrip()}
 <div class="trustbar"><div class="wrap trustgrid">
  <div class="trust"><span class="trusticon">◇</span><div><strong>Comfortable Rides</strong><small>AC fleet & experienced drivers</small></div></div>
  <div class="trust"><span class="trusticon">◎</span><div><strong>Flexible Journeys</strong><small>One-way, round trip & local</small></div></div>
@@ -410,15 +454,15 @@ ${nav(0)}
 <div class="servicegrid">
  <article class="service"><div class="si">↗</div><h3>Outstation Cabs</h3><p>Intercity rides for business, family visits, and spontaneous getaways.</p></article>
  <article class="service"><div class="si">◷</div><h3>Local Rentals</h3><p>Flexible local travel for errands, meetings, sightseeing, and events.</p></article>
- <article class="service"><div class="si">✈</div><h3>Airport Transfers</h3><p>Belagavi (IXG), Goa, and hub airport pickups aligned to your flight.</p></article>
+ <article class="service"><div class="si">✈</div><h3>Airport Transfers</h3><p>Hubballi (HBX), Belagavi (IXG), Goa (GOI/GOX), and connection pickups aligned to your flight.</p></article>
  <article class="service"><div class="si">⌖</div><h3>Temple & Group Tours</h3><p>Bring family and friends together for meaningful journeys and holidays.</p></article>
 </div></div></section>
-<section id="destinations"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">GET INSPIRED</div><h2>Every road has a story.</h2></div><p>Top Karnataka & Goa routes from Belagavi — tap a destination for travel tips and instant WhatsApp quotes.</p></div>
+<section id="destinations"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">GET INSPIRED</div><h2>Every road has a story.</h2></div><p>Top Karnataka & Goa routes from Hubballi (Hubli) — tap a destination for travel tips and instant WhatsApp quotes.</p></div>
 <div class="destgrid routes-all">
 ${allDestCards}
 </div></div></section>
 <section class="about" id="about"><div class="wrap aboutgrid"><div class="aboutpic"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=85" alt="Scenic open road and landscape" width="1000" height="667" loading="lazy" decoding="async"><div class="aboutbadge">The journey should feel as good as the destination.<span>THE OMKARESHWAR APPROACH</span></div></div>
-<div class="aboutcopy"><div class="eyebrow">A MORE PERSONAL WAY TO TRAVEL</div><h2>Good journeys start with good planning.</h2><p>Based in Belagavi, we specialise in outstation taxis to Goa, coastal Karnataka, Hampi, Coorg, and adventure hubs like Dandeli — with sedans, SUVs, Innova, and Tempo Travellers.</p><p>Share your route and dates on WhatsApp or call us directly. We discuss vehicle options, driver details, and transparent pricing before you confirm.</p><div class="points"><div class="point">Belagavi & North Karnataka pickups</div><div class="point">Goa & coastal route expertise</div><div class="point">Corporate & family group travel</div><div class="point">Airport & railway transfers</div></div><a class="btn gold" href="#booking">LET'S PLAN YOUR TRIP ↗</a></div>
+<div class="aboutcopy"><div class="eyebrow">A MORE PERSONAL WAY TO TRAVEL</div><h2>Good journeys start with good planning.</h2><p>Based in <strong>Hubballi (Hubli)</strong>, we specialise in outstation taxis to Goa, coastal Karnataka, Hampi, Coorg, Belagavi, and adventure hubs like Dandeli — with sedans, SUVs, Innova, and Tempo Travellers.</p><p>Share your route and dates on WhatsApp at <a href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a> or call us directly. We discuss vehicle options, driver details, and transparent pricing before you confirm.</p><div class="points"><div class="point">Hubli railway & city pickups</div><div class="point">Goa & coastal route expertise</div><div class="point">Corporate & family group travel</div><div class="point">Airport & railway transfers</div></div><a class="btn gold" href="#booking">LET'S PLAN YOUR TRIP ↗</a></div>
 </div></section>
 <section class="reviews"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">TRAVEL WITH CONFIDENCE</div><h2>Your trust matters.</h2></div><p>High-intent travel needs clear communication — we focus on punctual pickups, safe driving, and honest quotations.</p></div>
 <div class="reviewgrid">
@@ -426,7 +470,8 @@ ${allDestCards}
  <article class="review"><div class="stars">★★★★★</div><blockquote>“A good trip starts when your travel plans are understood from the beginning.”</blockquote><strong>Our approach</strong><small>Clear, personalised planning</small></article>
  <article class="review"><div class="stars">★★★★★</div><blockquote>“From a short ride to a longer getaway, every detail deserves attention.”</blockquote><strong>Our promise</strong><small>Service built around your trip</small></article>
 </div></div></section>
-<div class="cta"><div class="wrap ctainner"><div><h2>Your next journey starts here.</h2><p>Call now or send your route on WhatsApp — we respond quickly with vehicle options and fares.</p></div><div class="ctabtns"><a href="#booking" class="btn darkbtn">GET A QUOTE ↗</a><a href="tel:+919845012345" class="btn lightbtn" data-phone>CALL US</a></div></div></div>
+${seoHubSection()}
+<div class="cta"><div class="wrap ctainner"><div><h2>Your next journey starts here.</h2><p>Call now or send your route on WhatsApp — we respond quickly with vehicle options and fares.</p></div><div class="ctabtns"><a href="#booking" class="btn darkbtn">GET A QUOTE ↗</a><a href="tel:${CONTACT.phoneTel}" class="btn lightbtn" data-phone>CALL US</a></div></div></div>
 </main>
 ${footer(0)}
 ${floatActions("Hello Omkareshwar Travels, I would like a taxi quote.")}
@@ -437,8 +482,8 @@ ${scripts(0)}
 function routePage(route) {
   const copy = routeCopy[route.slug] || { intro: "", highlights: [], faq: [] };
   const url = `${DOMAIN}/routes/${route.slug}/`;
-  const title = `${route.name} Taxi from Belagavi | Omkareshwar Travels`;
-  const description = `Book ${route.name} outstation taxi from Belagavi. ${route.tagline}. Sedan, SUV & Tempo Traveller. ${route.idealDuration}. WhatsApp quote.`;
+  const title = `Hubli to ${route.name} Taxi | Cab from Hubballi | Omkareshwar Travels`;
+  const description = `Book Hubli to ${route.name} outstation taxi from Hubballi. ${route.tagline}. Sedan, SUV & Tempo Traveller. ${route.idealDuration}. WhatsApp quote.`;
   const highlights = copy.highlights.map((h) => `<li>${esc(h)}</li>`).join("");
   const faqHtml = copy.faq
     .map((f) => `<article><h3>${esc(f.q)}</h3><p>${esc(f.a)}</p></article>`)
@@ -484,18 +529,18 @@ function routePage(route) {
     jsonLd: [businessJsonLd(), breadcrumb, serviceLd, faqLd]
   })}
 <body>
-${topBar(2)}
+${topBar()}
 ${nav(2)}
 <main>
 <section class="hero" style="--hero-image:url('${route.heroImage}')"><div class="wrap heroGrid route-hero-grid">
  <div>
   <p class="breadcrumb"><a href="../../">Home</a> / <a href="../../#destinations">Routes</a> / ${esc(route.name)}</p>
   <div class="eyebrow">${esc(route.category)}</div>
-  <h1>${esc(route.name)} cab<br><em>from Belagavi</em></h1>
+  <h1>${esc(route.name)} cab<br><em>from Hubli</em></h1>
   <p class="herop">${esc(copy.intro)}</p>
-  <div class="herobuttons"><a href="#booking" class="btn gold">Get ${esc(route.name)} Quote ↗</a><a href="tel:+919845012345" class="btn outline" data-phone>Call Now</a></div>
+  <div class="herobuttons"><a href="#booking" class="btn gold">Get ${esc(route.name)} Quote ↗</a><a class="btn outline" data-whatsapp-link data-wa-text="Hello, I need a Hubli to ${route.name} taxi." href="https://wa.me/${CONTACT.whatsapp}">WhatsApp</a><a href="tel:${CONTACT.phoneTel}" class="btn outline" data-phone>Call Now</a></div>
   <div class="route-meta">
-   <div><strong>From Belagavi</strong><span>${esc(route.distanceFromBelagavi)}</span></div>
+   <div><strong>From Hubballi</strong><span>${esc(route.distanceFromHubli)}</span></div>
    <div><strong>Ideal stay</strong><span>${esc(route.idealDuration)}</span></div>
    <div><strong>Best season</strong><span>${esc(route.bestSeason)}</span></div>
    <div><strong>Enquiry</strong><span>WhatsApp or phone</span></div>
@@ -516,9 +561,10 @@ ${nav(2)}
    ${faqHtml}
   </div>
  </div>
- <aside class="route-sidebar">${bookingForm(route.name, 2)}</aside>
+ <aside class="route-sidebar">${bookingForm(route.name, 2, CONTACT.hubCity)}</aside>
 </div></section>
-<div class="cta"><div class="wrap ctainner"><div><h2>Ready for ${esc(route.name)}?</h2><p>Share pickup city, dates, and group size — we reply on WhatsApp with fare options.</p></div><div class="ctabtns"><a href="#booking" class="btn darkbtn">WHATSAPP QUOTE ↗</a><a href="tel:+919845012345" class="btn lightbtn" data-phone>CALL</a></div></div></div>
+<section class="route-related"><div class="wrap">${relatedRoutes(route.slug, 2)}</div></section>
+<div class="cta"><div class="wrap ctainner"><div><h2>Ready for ${esc(route.name)}?</h2><p>Share pickup in Hubli, travel dates, and group size — we reply on WhatsApp with fare options.</p></div><div class="ctabtns"><a href="#booking" class="btn darkbtn">WHATSAPP QUOTE ↗</a><a href="tel:${CONTACT.phoneTel}" class="btn lightbtn" data-phone>CALL</a></div></div></div>
 </main>
 ${footer(2)}
 ${floatActions(`Hello, I need a taxi to ${route.name}.`)}
@@ -532,8 +578,8 @@ function legalPage(kind) {
   const url = DOMAIN + "/" + slug + "/";
   const title = isPrivacy ? "Privacy Policy | Omkareshwar Travels" : "Terms & Conditions | Omkareshwar Travels";
   const body = isPrivacy
-    ? `<h1>Privacy Policy</h1><p>Omkareshwar Travels ("we") collects contact details and trip information you submit via phone, WhatsApp, or forms on omkareshwartravels.com solely to provide quotations and taxi services.</p><h2>Data we collect</h2><p>Name, phone number, pickup and drop locations, travel dates, and passenger counts.</p><h2>How we use data</h2><p>To respond to enquiries, assign drivers, and improve service. We do not sell personal data.</p><h2>Retention</h2><p>Trip records are kept as required for operations and applicable law.</p><h2>Contact</h2><p>bookings@omkareshwartravels.com</p>`
-    : `<h1>Terms & Conditions</h1><p>By booking with Omkareshwar Travels you agree to these terms. Fares are discussed before confirmation; tolls, parking, and state permits may be additional unless included in writing.</p><h2>Bookings</h2><p>Advance confirmation may require a deposit for outstation and multi-day trips.</p><h2>Cancellations</h2><p>Cancellation charges depend on notice period and vehicle allocation — we communicate these when you confirm.</p><h2>Liability</h2><p>We operate with licensed drivers and maintained vehicles; passengers must follow safety guidance during travel.</p><h2>Contact</h2><p>bookings@omkareshwartravels.com</p>`;
+    ? `<h1>Privacy Policy</h1><p>Omkareshwar Travels ("we") collects contact details and trip information you submit via phone, WhatsApp, or forms on omkareshwartravels.com solely to provide quotations and taxi services.</p><h2>Data we collect</h2><p>Name, phone number, pickup and drop locations, travel dates, and passenger counts.</p><h2>How we use data</h2><p>To respond to enquiries, assign drivers, and improve service. We do not sell personal data.</p><h2>Retention</h2><p>Trip records are kept as required for operations and applicable law.</p><h2>Contact</h2><p><a href="mailto:${CONTACT.email}">${esc(CONTACT.email)}</a></p>`
+    : `<h1>Terms & Conditions</h1><p>By booking with Omkareshwar Travels you agree to these terms. Fares are discussed before confirmation; tolls, parking, and state permits may be additional unless included in writing.</p><h2>Bookings</h2><p>Advance confirmation may require a deposit for outstation and multi-day trips.</p><h2>Cancellations</h2><p>Cancellation charges depend on notice period and vehicle allocation — we communicate these when you confirm.</p><h2>Liability</h2><p>We operate with licensed drivers and maintained vehicles; passengers must follow safety guidance during travel.</p><h2>Contact</h2><p><a href="mailto:${CONTACT.email}">${esc(CONTACT.email)}</a></p>`;
   return `${head({
     title,
     description: title,
@@ -543,7 +589,7 @@ function legalPage(kind) {
     jsonLd: [businessJsonLd()]
   })}
 <body>
-${topBar(1)}
+${topBar()}
 ${nav(1)}
 <main><section><div class="wrap legal">${body}<p><a href="../">← Back to home</a></p></div></section></main>
 ${footer(1)}

@@ -15,7 +15,7 @@ npm run dev   # preview at http://localhost:3456
 2. Build command: `npm run build` (already in `netlify.toml`).
 3. Publish directory: `dist`.
 4. Add custom domain **omkareshwartravels.com** and enable HTTPS.
-5. Update contact details in `site/assets/js/site-config.js` (phone & WhatsApp), then rebuild.
+5. Update **phone & WhatsApp** in `site/data/site-contact.json` (email & Hubli hub are set), then rebuild — `site-config.js` is auto-synced on build.
 
 ## Google Search Console & sitemap
 
@@ -33,7 +33,9 @@ npm run dev   # preview at http://localhost:3456
 | `/routes/goa/` | Goa |
 | `/routes/hospet/` | Hospet |
 | `/routes/hampi/` | Hampi |
-| `/routes/belagavi/` | Belagavi |
+| `/routes/belagavi/` | Belagavi (from Hubli) |
+
+**Hub city:** Hubballi (Hubli) — all copy and SEO centre on Hubli pickups.
 | `/routes/coorg/` | Coorg |
 | `/routes/udupi/` | Udupi |
 | `/routes/jog-falls/` | Jog Falls |
