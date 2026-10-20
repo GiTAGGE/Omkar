@@ -44,6 +44,9 @@ npm run dev   # preview at http://localhost:3456
 
 - Route list & meta: `site/data/routes.json`
 - Route body copy & FAQs: `scripts/build-site.mjs` (`routeCopy`)
+- **Images:** `site/assets/images/` — see `site/assets/images/README.md` (fleet, destinations, home)
+- Fleet image filenames: `site/data/fleet-images.json`
+- Re-download remote stock into folders: `npm run images`
 - Styles: `site/assets/css/styles.css`
 - After changes: `npm run build`
 

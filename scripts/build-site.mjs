@@ -240,7 +240,23 @@ function assetPrefix(depth) {
   return (depth === 0 ? "/" : "../".repeat(depth)) + "assets";
 }
 
-function head({ title, description, keywords, canonical, depth = 0, jsonLd = [] }) {
+function imagePath(depth, relativeFile) {
+  return `${assetPrefix(depth)}/images/${relativeFile}`;
+}
+
+function destCardImage(slug, depth) {
+  return imagePath(depth, `destinations/${slug}/card.jpg`);
+}
+
+function destHeroImage(slug, depth) {
+  return imagePath(depth, `destinations/${slug}/hero.jpg`);
+}
+
+function absoluteImage(relativeFile) {
+  return DOMAIN + "/assets/images/" + relativeFile;
+}
+
+function head({ title, description, keywords, canonical, depth = 0, jsonLd = [], ogImage }) {
   const ap = assetPrefix(depth);
   const ld = jsonLd
     .map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`)
@@ -260,14 +276,11 @@ function head({ title, description, keywords, canonical, depth = 0, jsonLd = [] 
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${esc(canonical)}">
+${ogImage ? `<meta property="og:image" content="${esc(ogImage)}">` : ""}
 <meta property="og:locale" content="en_IN">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
-<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
-<link rel="dns-prefetch" href="https://images.unsplash.com">
-<link rel="preconnect" href="https://upload.wikimedia.org" crossorigin>
-<link rel="dns-prefetch" href="https://upload.wikimedia.org">
 <link rel="preconnect" href="https://wa.me">
 <link rel="dns-prefetch" href="https://wa.me">
 <link rel="stylesheet" href="${ap}/css/styles.css">
@@ -400,7 +413,7 @@ function homePage() {
   const allDestCards = routes
     .map(
       (r, i) =>
-        `<a href="/routes/${r.slug}/" class="dest"><img src="${r.cardImage}" alt="${esc(r.name)} taxi from Hubli Hubballi" width="800" height="600" loading="lazy" decoding="async"><div class="destinfo"><small>${esc(r.category)}</small><h3>${esc(r.name)}</h3><span>${esc(r.tagline)} ↗</span></div></a>`
+        `<a href="/routes/${r.slug}/" class="dest"><img src="${destCardImage(r.slug, 0)}" alt="${esc(r.name)} taxi from Hubli Hubballi" width="800" height="600" loading="lazy" decoding="async"><div class="destinfo"><small>${esc(r.category)}</small><h3>${esc(r.name)}</h3><span>${esc(r.tagline)} ↗</span></div></a>`
     )
     .join("\n");
 
@@ -416,6 +429,7 @@ function homePage() {
     keywords,
     canonical: DOMAIN + "/",
     depth: 0,
+    ogImage: absoluteImage("home/hero.jpg"),
     jsonLd: [
       businessJsonLd(),
       {
@@ -435,7 +449,7 @@ function homePage() {
 ${topBar(0)}
 ${nav(0)}
 <main>
-<section class="hero" id="home" style="--hero-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=85')"><div class="wrap heroGrid">
+<section class="hero" id="home" style="--hero-image:url('${imagePath(0, "home/hero.jpg")}')"><div class="wrap heroGrid">
  <div><div class="eyebrow">HUBBALLI (HUBLI) TAXI SERVICE</div><h1>Your journey.<br><em>Our commitment.</em></h1><p class="herop">From Hubli to Goa, Hampi, the coast, and beyond — comfortable outstation cabs and local rentals with clear WhatsApp quotes, same-day availability, and personal service.</p><div class="herobuttons"><a href="#booking" class="btn gold">Plan Your Journey ↗</a><a class="btn outline" data-whatsapp-link data-wa-text="Hello Omkareshwar Travels, I need a cab from Hubli." href="https://wa.me/${CONTACT.whatsapp}">Chat on WhatsApp</a><a href="tel:${CONTACT.phoneTel}" class="btn outline" data-phone>Call Now</a></div><div class="micro"><span>Hubli & Hubballi pickups</span><span>Karnataka & Goa routes</span><span>Fast WhatsApp quotes</span></div></div>
  ${bookingForm("", 0, CONTACT.hubCity)}
 </div></section>
@@ -448,9 +462,9 @@ ${conversionStrip()}
 </div></div>
 <section id="fleet"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">TRAVEL YOUR WAY</div><h2>Find your perfect ride.</h2></div><p>From quick city journeys to group adventures, choose a vehicle that suits your people and your plans.</p></div>
 <div class="fleet">
- <article class="car"><div class="carimg"><img src="${fleetImages.sedan.src}" alt="${esc(fleetImages.sedan.alt)}" width="960" height="640" loading="lazy" decoding="async"><span class="tag">EVERYDAY COMFORT</span></div><div class="carbody"><h3>Sedan</h3><div class="muted">Dzire / Etios class — ideal for couples & small families</div><div class="specs"><span>♙ 1–4 people</span><span>✓ City & outstation</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="Hatchback / Sedan">SELECT ↗</button></div></div></article>
- <article class="car"><div class="carimg"><img src="${fleetImages.suv.src}" alt="${esc(fleetImages.suv.alt)}" width="800" height="533" loading="lazy" decoding="async"><span class="tag">FAMILY FAVOURITE</span></div><div class="carbody"><h3>SUV / MUV</h3><div class="muted">Innova / Ertiga class — extra room for family and luggage</div><div class="specs"><span>♙ 4–7 people</span><span>✓ Road trips</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="SUV / MUV">SELECT ↗</button></div></div></article>
- <article class="car"><div class="carimg"><img src="${fleetImages.traveller.src}" alt="${esc(fleetImages.traveller.alt)}" width="960" height="640" loading="lazy" decoding="async"><span class="tag">GROUP JOURNEYS</span></div><div class="carbody"><h3>Tempo Traveller</h3><div class="muted">Force Traveller — 12 to 17 seater group tours</div><div class="specs"><span>♙ Group seating</span><span>✓ Tours & events</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="Tempo Traveller">SELECT ↗</button></div></div></article>
+ <article class="car"><div class="carimg"><img src="${imagePath(0, fleetImages.sedan.file)}" alt="${esc(fleetImages.sedan.alt)}" width="960" height="640" loading="lazy" decoding="async"><span class="tag">EVERYDAY COMFORT</span></div><div class="carbody"><h3>Sedan</h3><div class="muted">Dzire / Etios class — ideal for couples & small families</div><div class="specs"><span>♙ 1–4 people</span><span>✓ City & outstation</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="Hatchback / Sedan">SELECT ↗</button></div></div></article>
+ <article class="car"><div class="carimg"><img src="${imagePath(0, fleetImages.suv.file)}" alt="${esc(fleetImages.suv.alt)}" width="800" height="533" loading="lazy" decoding="async"><span class="tag">FAMILY FAVOURITE</span></div><div class="carbody"><h3>SUV / MUV</h3><div class="muted">Innova / Ertiga class — extra room for family and luggage</div><div class="specs"><span>♙ 4–7 people</span><span>✓ Road trips</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="SUV / MUV">SELECT ↗</button></div></div></article>
+ <article class="car"><div class="carimg"><img src="${imagePath(0, fleetImages.traveller.file)}" alt="${esc(fleetImages.traveller.alt)}" width="960" height="640" loading="lazy" decoding="async"><span class="tag">GROUP JOURNEYS</span></div><div class="carbody"><h3>Tempo Traveller</h3><div class="muted">Force Traveller — 12 to 17 seater group tours</div><div class="specs"><span>♙ Group seating</span><span>✓ Tours & events</span></div><div class="carfoot"><strong>Request a quote</strong><button type="button" data-vehicle="Tempo Traveller">SELECT ↗</button></div></div></article>
 </div><p class="muted" style="margin-top:14px">Vehicle models, seating, and availability are confirmed when you enquire. Fleet photos show typical Dzire-class sedans and Tempo Traveller vans used on Karnataka routes.</p>
 </div></section>
 <section class="services" id="services"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">MADE FOR YOUR PLANS</div><h2>One travel partner. Many journeys.</h2></div><p>Whether you know exactly where you're going or need help planning, start with the trip you have in mind.</p></div>
@@ -464,7 +478,7 @@ ${conversionStrip()}
 <div class="destgrid routes-all">
 ${allDestCards}
 </div></div></section>
-<section class="about" id="about"><div class="wrap aboutgrid"><div class="aboutpic"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=85" alt="Scenic open road and landscape" width="1000" height="667" loading="lazy" decoding="async"><div class="aboutbadge">The journey should feel as good as the destination.<span>THE OMKARESHWAR APPROACH</span></div></div>
+<section class="about" id="about"><div class="wrap aboutgrid"><div class="aboutpic"><img src="${imagePath(0, "home/about.jpg")}" alt="Scenic open road and landscape" width="1000" height="667" loading="lazy" decoding="async"><div class="aboutbadge">The journey should feel as good as the destination.<span>THE OMKARESHWAR APPROACH</span></div></div>
 <div class="aboutcopy"><div class="eyebrow">A MORE PERSONAL WAY TO TRAVEL</div><h2>Good journeys start with good planning.</h2><p>Based in <strong>Hubballi (Hubli)</strong>, we specialise in outstation taxis to Goa, coastal Karnataka, Hampi, Coorg, Belagavi, and adventure hubs like Dandeli — with sedans, SUVs, Innova, and Tempo Travellers.</p><p>Share your route and dates on WhatsApp at <a href="mailto:${CONTACT.email}" data-email>${esc(CONTACT.email)}</a> or call us directly. We discuss vehicle options, driver details, and transparent pricing before you confirm.</p><div class="points"><div class="point">Hubli railway & city pickups</div><div class="point">Goa & coastal route expertise</div><div class="point">Corporate & family group travel</div><div class="point">Airport & railway transfers</div></div><a class="btn gold" href="#booking">LET'S PLAN YOUR TRIP ↗</a></div>
 </div></section>
 <section class="reviews"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">TRAVEL WITH CONFIDENCE</div><h2>Your trust matters.</h2></div><p>High-intent travel needs clear communication — we focus on punctual pickups, safe driving, and honest quotations.</p></div>
@@ -529,13 +543,14 @@ function routePage(route) {
     keywords: route.metaKeywords,
     canonical: url,
     depth: 2,
+    ogImage: absoluteImage(`destinations/${route.slug}/hero.jpg`),
     jsonLd: [businessJsonLd(), breadcrumb, serviceLd, faqLd]
   })}
 <body>
 ${topBar()}
 ${nav(2)}
 <main>
-<section class="hero" style="--hero-image:url('${route.heroImage}')"><div class="wrap heroGrid route-hero-grid">
+<section class="hero" style="--hero-image:url('${destHeroImage(route.slug, 2)}')"><div class="wrap heroGrid route-hero-grid">
  <div>
   <p class="breadcrumb"><a href="../../">Home</a> / <a href="../../#destinations">Routes</a> / ${esc(route.name)}</p>
   <div class="eyebrow">${esc(route.category)}</div>
