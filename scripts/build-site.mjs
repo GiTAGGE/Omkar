@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { syncImagesFromUploads } from "./sync-images-from-uploads.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -20,6 +21,10 @@ window.OT_SITE = ${JSON.stringify(CONTACT, null, 2)};
   fs.writeFileSync(path.join(site, "assets", "js", "site-config.js"), js, "utf8");
 }
 syncSiteConfig();
+const imageSync = syncImagesFromUploads();
+if (imageSync.copied.length) {
+  console.log("Synced", imageSync.copied.length, "image(s) from site/assets/images/uploads/");
+}
 
 const routeCopy = {
   dandeli: {

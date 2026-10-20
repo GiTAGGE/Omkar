@@ -4,9 +4,9 @@ window.OT_SITE = {
   "businessName": "Omkareshwar Travels",
   "hubCity": "Hubballi",
   "hubCityAlt": "Hubli",
-  "phoneDisplay": "+91 98450 12345",
-  "phoneTel": "+919845012345",
-  "whatsapp": "919845012345",
+  "phoneDisplay": "+91 91106 21188",
+  "phoneTel": "+919110621188",
+  "whatsapp": "919110621188",
   "email": "omkareshwaratravels@gmail.com",
   "address": {
     "streetAddress": "Near Hubballi Railway Station",

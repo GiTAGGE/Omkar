@@ -5,6 +5,7 @@
   "scripts": {
     "build": "node scripts/build-site.mjs",
     "images": "node scripts/fetch-images.mjs",
+    "images:sync": "node scripts/sync-images-from-uploads.mjs",
     "dev": "npx --yes serve dist -l 3456"
   }
 }
