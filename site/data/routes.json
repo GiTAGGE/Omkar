@@ -1,0 +1,122 @@
+[
+  {
+    "slug": "dandeli",
+    "name": "Dandeli",
+    "tagline": "River rafting & Western Ghats wildlife",
+    "category": "Adventure & nature",
+    "heroImage": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1800&q=80",
+    "cardImage": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1000&q=80",
+    "distanceFromBelagavi": "≈ 110 km",
+    "idealDuration": "2–3 days",
+    "bestSeason": "October to May",
+    "metaKeywords": "Dandeli taxi, Belagavi to Dandeli cab, Dandeli outstation taxi, river rafting trip Karnataka"
+  },
+  {
+    "slug": "gokarna",
+    "name": "Gokarna",
+    "tagline": "Sacred coastlines & quiet beaches",
+    "category": "Beach & pilgrimage",
+    "heroImage": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=80",
+    "cardImage": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80",
+    "distanceFromBelagavi": "≈ 145 km",
+    "idealDuration": "2–4 days",
+    "bestSeason": "October to March",
+    "metaKeywords": "Gokarna cab service, Belagavi to Gokarna taxi, Gokarna beach tour, Karnataka coastal travel"
+  },
+  {
+    "slug": "murudeshwar",
+    "name": "Murudeshwar",
+    "tagline": "Shiva statue & Arabian Sea views",
+    "category": "Temple & coastal",
+    "heroImage": "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1800&q=80",
+    "cardImage": "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1000&q=80",
+    "distanceFromBelagavi": "≈ 165 km",
+    "idealDuration": "1–2 days",
+    "bestSeason": "October to February",
+    "metaKeywords": "Murudeshwar taxi, Belagavi to Murudeshwar cab, Murudeshwar temple tour, coastal Karnataka cab"
+  },
+  {
+    "slug": "goa",
+    "name": "Goa",
+    "tagline": "Beaches, heritage & weekend escapes",
+    "category": "Holiday favourite",
+    "heroImage": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1800&q=80",
+    "cardImage": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1000&q=80",
+    "distanceFromBelagavi": "≈ 110 km",
+    "idealDuration": "3–5 days",
+    "bestSeason": "November to February",
+    "metaKeywords": "Goa taxi from Belagavi, Belagavi to Goa cab, North Goa South Goa outstation, Goa family trip taxi"
+  },
+  {
+    "slug": "hospet",
+    "name": "Hospet",
+    "tagline": "Gateway to Hampi & heritage trails",
+    "category": "Heritage hub",
+    "heroImage": "https://images.unsplash.com/photo-1590073242678-ac64a4d4f3b5?auto=format&fit=crop&w=1800&q=80",
+    "cardImage": "https://images.unsplash.com/photo-1590073242678-ac64a4d4f3b5?auto=format&fit=crop&w=1000&q=80",
+    "distanceFromBelagavi": "≈ 260 km",
+    "idealDuration": "1–2 days",
+    "bestSeason": "October to March",
+    "metaKeywords": "Hospet taxi service, Belagavi to Hospet cab, Hampi gateway taxi, Karnataka heritage travel"
+  },
+  {
+    "slug": "hampi",
+    "name": "Hampi",
+    "tagline": "UNESCO ruins & boulder landscapes",
+    "category": "World heritage",
+    "heroImage": "https://images.unsplash.com/photo-1596402184320-417e71736b3f?auto=format&fit=crop&w=1800&q=80",
+    "cardImage": "https://images.unsplash.com/photo-1596402184320-417e71736b3f?auto=format&fit=crop&w=1000&q=80",
+    "distanceFromBelagavi": "≈ 270 km",
+    "idealDuration": "2–3 days",
+    "bestSeason": "October to February",
+    "metaKeywords": "Hampi taxi tour, Belagavi to Hampi cab, Hampi outstation taxi, UNESCO site Karnataka cab"
+  },
+  {
+    "slug": "belagavi",
+    "name": "Belagavi",
+    "tagline": "Your home base for Karnataka & Goa trips",
+    "category": "City & airport transfers",
+    "heroImage": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1800&q=80",
+    "cardImage": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1000&q=80",
+    "distanceFromBelagavi": "Local",
+    "idealDuration": "Half day to multi-day",
+    "bestSeason": "Year-round",
+    "metaKeywords": "Belagavi taxi, Belagavi airport cab, local rental Belagavi, outstation cab Belagavi"
+  },
+  {
+    "slug": "coorg",
+    "name": "Coorg",
+    "tagline": "Coffee country, mist & waterfalls",
+    "category": "Hill station",
+    "heroImage": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1800&q=80",
+    "cardImage": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1000&q=80",
+    "distanceFromBelagavi": "≈ 240 km",
+    "idealDuration": "3–4 days",
+    "bestSeason": "October to March",
+    "metaKeywords": "Coorg taxi from Belagavi, Madikeri cab, Coorg family tour taxi, Karnataka hill station cab"
+  },
+  {
+    "slug": "udupi",
+    "name": "Udupi",
+    "tagline": "Temple town & Malabar coast charm",
+    "category": "Spiritual & culinary",
+    "heroImage": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1800&q=80",
+    "cardImage": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1000&q=80",
+    "distanceFromBelagavi": "≈ 175 km",
+    "idealDuration": "1–3 days",
+    "bestSeason": "October to March",
+    "metaKeywords": "Udupi taxi, Belagavi to Udupi cab, Udupi temple tour, Karnataka coast cab service"
+  },
+  {
+    "slug": "jog-falls",
+    "name": "Jog Falls",
+    "tagline": "India's tallest plunge waterfall",
+    "category": "Monsoon spectacle",
+    "heroImage": "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=1800&q=80",
+    "cardImage": "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=1000&q=80",
+    "distanceFromBelagavi": "≈ 200 km",
+    "idealDuration": "1–2 days",
+    "bestSeason": "July to December",
+    "metaKeywords": "Jog Falls taxi, Belagavi to Jog Falls cab, waterfall trip Karnataka, Shimoga tour taxi"
+  }
+]
