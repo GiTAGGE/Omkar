@@ -17,13 +17,13 @@ Replace any file here, then run **`npm run build`**. The build copies files into
 | `destinations/gokarna-om-beach.jpg` | Gokarna |
 | `destinations/murudeshwar-shiva-coast.jpg` | Murudeshwar |
 
-## Replace stock placeholders (your own photos)
+## Goa, Dandeli, Belagavi, Jog Falls (added)
 
-These four files are **temporary stock** until you drop your real images (same names):
+| File | Content |
+|------|---------|
+| `goa-beach.jpg` | Dudhsagar Falls & train (Goa) |
+| `dandeli-nature.jpg` | Kali River white-water rafting |
+| `belagavi.jpg` | Hilltop fort & temple (aerial) |
+| `jog-falls.jpg` | Jog Falls viewpoint |
 
-- `destinations/goa-beach.jpg`
-- `destinations/dandeli-nature.jpg`
-- `destinations/belagavi.jpg`
-- `destinations/jog-falls.jpg`
-
-No extra JSON edits needed — just overwrite the JPG and rebuild.
+Overwrite any JPG here and run `npm run build` to refresh the live site.
