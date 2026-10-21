@@ -1,5 +1,8 @@
 /**
- * GA4 events for Google Ads — whatsapp_click & phone_call.
+ * GA4 events for Google Ads:
+ * - whatsapp_button_click — direct WhatsApp links (hero, float bar, outline buttons)
+ * - whatsapp_form_submit — booking form → opens WhatsApp with trip details
+ * - phone_call — tel: / call links
  * Measurement ID: site/data/site-contact.json → OT_SITE.googleAnalyticsId
  */
 (() => {
@@ -27,46 +30,61 @@
     return location.pathname || "/";
   }
 
-  function bindWhatsApp(el) {
-    el.addEventListener("click", () => {
-      gtagEvent("whatsapp_click", {
-        event_category: "conversion",
-        event_label: placement(el),
-        placement: placement(el),
-        page_path: pagePath(),
-        link_text: (el.textContent || "").trim().slice(0, 80)
-      });
-    });
+  function whatsAppAnchorFromTarget(target) {
+    const el = target.closest?.("a");
+    if (!el) return null;
+    const href = el.getAttribute("href") || "";
+    if (el.hasAttribute("data-whatsapp-link") || href.includes("wa.me")) return el;
+    return null;
   }
 
-  function bindPhone(el) {
-    if (el.tagName !== "A") return;
-    el.addEventListener("click", () => {
-      gtagEvent("phone_call", {
-        event_category: "conversion",
-        event_label: placement(el),
-        placement: placement(el),
-        page_path: pagePath(),
-        link_text: (el.textContent || "").trim().slice(0, 80)
-      });
-    });
+  function phoneAnchorFromTarget(target) {
+    const el = target.closest?.("a");
+    if (!el) return null;
+    const href = el.getAttribute("href") || "";
+    if (href.startsWith("tel:") || el.hasAttribute("data-phone")) return el;
+    return null;
   }
 
   function init() {
     if (!cfg.googleAnalyticsId) return;
 
-    document.querySelectorAll("[data-whatsapp-link]").forEach(bindWhatsApp);
+    document.addEventListener(
+      "click",
+      (e) => {
+        const wa = whatsAppAnchorFromTarget(e.target);
+        if (wa) {
+          gtagEvent("whatsapp_button_click", {
+            event_category: "conversion",
+            event_label: placement(wa),
+            placement: placement(wa),
+            page_path: pagePath(),
+            method: "button",
+            link_text: (wa.textContent || "").trim().slice(0, 80)
+          });
+          return;
+        }
 
-    document.querySelectorAll("a[href^='tel:'], a[data-phone]").forEach((el) => {
-      if (el.getAttribute("href")?.startsWith("tel:") || el.hasAttribute("data-phone")) bindPhone(el);
-    });
+        const tel = phoneAnchorFromTarget(e.target);
+        if (tel) {
+          gtagEvent("phone_call", {
+            event_category: "conversion",
+            event_label: placement(tel),
+            placement: placement(tel),
+            page_path: pagePath(),
+            link_text: (tel.textContent || "").trim().slice(0, 80)
+          });
+        }
+      },
+      true
+    );
 
     const form = document.getElementById("bookingForm");
     if (form) {
       form.addEventListener("submit", () => {
-        gtagEvent("whatsapp_click", {
+        gtagEvent("whatsapp_form_submit", {
           event_category: "conversion",
-          event_label: "booking_form_submit",
+          event_label: "booking_form",
           placement: "booking_form_submit",
           page_path: pagePath(),
           method: "quote_form"
