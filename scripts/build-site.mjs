@@ -376,6 +376,22 @@ function absoluteImage(relativeFile) {
   return DOMAIN + "/assets/images/" + relativeFile;
 }
 
+function googleAnalyticsHead() {
+  const id = CONTACT.googleAnalyticsId;
+  if (!id) return "";
+  return `<link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=${esc(id)}"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag("js", new Date());
+gtag("config", "${esc(id)}");
+</script>
+`;
+}
+
 function head({ title, description, keywords, canonical, depth = 0, jsonLd = [], ogImage }) {
   const ap = assetPrefix(depth);
   const ld = jsonLd
@@ -384,7 +400,7 @@ function head({ title, description, keywords, canonical, depth = 0, jsonLd = [],
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+${googleAnalyticsHead()}<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
@@ -561,7 +577,7 @@ function seoHubSection() {
 
 function scripts(depth) {
   const ap = assetPrefix(depth);
-  return `<script src="${ap}/js/site-config.js" defer></script><script src="${ap}/js/main.js" defer></script>`;
+  return `<script src="${ap}/js/site-config.js" defer></script><script src="${ap}/js/main.js" defer></script><script src="${ap}/js/analytics.js" defer></script>`;
 }
 
 function homePage() {
