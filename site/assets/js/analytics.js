@@ -1,9 +1,9 @@
 /**
- * GA4 events for Google Ads:
+ * GA4 + Google Ads events (single gtag, both configs in <head>):
  * - whatsapp_button_click — direct WhatsApp links (hero, float bar, outline buttons)
  * - whatsapp_form_submit — booking form → opens WhatsApp with trip details
  * - phone_call — tel: / call links
- * Measurement ID: site/data/site-contact.json → OT_SITE.googleAnalyticsId
+ * IDs: site/data/site-contact.json → OT_SITE.googleAnalyticsId / googleAdsId
  */
 (() => {
   const cfg = window.OT_SITE || {};
@@ -47,7 +47,7 @@
   }
 
   function init() {
-    if (!cfg.googleAnalyticsId) return;
+    if (!cfg.googleAnalyticsId && !cfg.googleAdsId) return;
 
     document.addEventListener(
       "click",

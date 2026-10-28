@@ -8,6 +8,8 @@ window.OT_SITE = {
   "phoneTel": "+919110621188",
   "whatsapp": "919110621188",
   "email": "omkareshwaratravels@gmail.com",
+  "googleAnalyticsId": "G-50YV8FMKV7",
+  "googleAdsId": "AW-18542428945",
   "address": {
     "streetAddress": "Near Hubballi Railway Station",
     "addressLocality": "Hubballi",
