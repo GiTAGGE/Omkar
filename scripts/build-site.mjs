@@ -376,18 +376,24 @@ function absoluteImage(relativeFile) {
   return DOMAIN + "/assets/images/" + relativeFile;
 }
 
+function googleTagIds() {
+  return [...new Set([CONTACT.googleAnalyticsId, CONTACT.googleAdsId].filter(Boolean))];
+}
+
 function googleAnalyticsHead() {
-  const id = CONTACT.googleAnalyticsId;
-  if (!id) return "";
+  const ids = googleTagIds();
+  if (!ids.length) return "";
+  const loadId = ids[0];
+  const configs = ids.map((id) => `gtag("config", "${esc(id)}");`).join("\n");
   return `<link rel="preconnect" href="https://www.googletagmanager.com">
 <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=${esc(id)}"></script>
+<!-- Google tag (gtag.js) — one snippet, GA4 + Google Ads configs -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=${esc(loadId)}"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag("js", new Date());
-gtag("config", "${esc(id)}");
+${configs}
 </script>
 `;
 }
