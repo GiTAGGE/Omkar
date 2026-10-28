@@ -1,9 +1,9 @@
 /**
- * GA4 events for Google Ads:
+ * Conversion events for the Google tag (Google Ads AW-18542428945):
  * - whatsapp_button_click — direct WhatsApp links (hero, float bar, outline buttons)
  * - whatsapp_form_submit — booking form → opens WhatsApp with trip details
  * - phone_call — tel: / call links
- * Measurement ID: site/data/site-contact.json → OT_SITE.googleAnalyticsId
+ * Tag ID: site/data/site-contact.json → OT_SITE.googleAnalyticsId
  */
 (() => {
   const cfg = window.OT_SITE || {};
